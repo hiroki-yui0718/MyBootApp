@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+<title>Top Page</title>
+<style>
+body{font-size:16pt;color:#999;}
+h1{font-size:100pt;text-align:right;color:#f6f6f6;
+letter-spacing:-0.1rem;margin:-50px 0px -50px 0px;}
+</style>
+ </head>
+ <body>
+ <h1>Hello page</h1>
+<p th:text="${msg}"></p>
+<form action="/" method="POST">
+<input type="text" name="text1" th:value="${value}">
+<input type="submit" value="CLick">
+</form>
+</body>
+</html>
