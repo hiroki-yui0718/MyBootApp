@@ -10,7 +10,10 @@ letter-spacing:-0.1rem;margin:-50px 0px -50px 0px;}
 </style>
  </head>
  <body>
- <h1>Hello page</h1>
+ <h1 th:text="#{content.title}">Hello page</h1>
+ <p th:text="#{content.message}"></p>
+<p th:text="${new java.util.Date().toString()}"></p>
+<p th:text="'from parameter... id='+${param.id[0]+',name='+ param.name[0]}"></p>
 <p th:text="${msg}"></p>
 <form action="/" method="POST">
 <input type="text" name="text1" th:value="${value}">
