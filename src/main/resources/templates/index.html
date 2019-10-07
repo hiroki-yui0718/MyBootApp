@@ -3,21 +3,28 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
 <title>Top Page</title>
-<style>
-body{font-size:16pt;color:#999;}
-h1{font-size:100pt;text-align:right;color:#f6f6f6;
-letter-spacing:-0.1rem;margin:-50px 0px -50px 0px;}
-</style>
+<link rel="stylesheet" href="webjars/bootstrap/4.1.1/css/bootstrap.min.css" />
+<script src="webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
  </head>
  <body>
- <h1 th:text="#{content.title}">Hello page</h1>
+ <header class="navbar navbar-fixed-top bg-dark mb-4">
+  <div class="container">
+ <h1 th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</h1>
+ </div>
+ </header>
+<div class="container">
  <p th:text="#{content.message}"></p>
 <p th:text="${new java.util.Date().toString()}"></p>
-<p th:text="'from parameter... id='+${param.id[0]+',name='+ param.name[0]}"></p>
 <p th:text="${msg}"></p>
 <form action="/" method="POST">
 <input type="text" name="text1" th:value="${value}">
-<input type="submit" value="CLick">
+<input type="submit" value="Click" class="btn  btn-primary">
 </form>
+<table class="table mt-3 table-hover" th:object="${object}">
+<tr><th class="bg-dark text-light">ID</th><td th:text="*{id}"></td></tr>
+<tr><th class="bg-dark text-light">NAME</th><td th:text="*{name}"></td></tr>
+<tr><th class="bg-dark text-light">VALUE</th><td th:text="*{value}"></td></tr>
+</table>
+</div>
 </body>
 </html>

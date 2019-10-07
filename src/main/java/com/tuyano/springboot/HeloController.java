@@ -24,25 +24,25 @@ public class HeloController {
 //public DataObject index(@PathVariable int id) {
 //	return new DataObject(id,names[id],mails[id]);
 //}
-//class DataObject{
-//	private int id;
-//	private String name;
-//	private String value;
-//	public DataObject(int id,String name,String value) {
-//		super();
-//		this.id = id;
-//		this.name = name;
-//		this.value = value;
-//		
-//	}
-//	public int getId() {return id;}
-//	public String getName() {return name;}
-//	public String getValue() {return value;}
-//	
-//	public void setId(int id) {this.id = id;}
-//	public void setName(String Name) {this.name = name;}
-//	public void setValue(String Value) {this.value = value;}
-//}
+class DataObject{
+	private int id;
+	private String name;
+	private String value;
+	public DataObject(int id,String name,String value) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.value = value;
+		
+	}
+	public int getId() {return id;}
+	public String getName() {return name;}
+	public String getValue() {return value;}
+	
+	public void setId(int id) {this.id = id;}
+	public void setName(String Name) {this.name = name;}
+	public void setValue(String Value) {this.value = value;}
+}
 //@RequestMapping("/{num}")
 //public String index(@PathVariable int num,Model model) {//model重要
 //	int res = 0;
@@ -50,10 +50,12 @@ public class HeloController {
 //	model.addAttribute("msg","total:" +res);
 //	return "index"; 
 //}
-@RequestMapping(value="/",method=RequestMethod.GET)
+@RequestMapping(value="/")
 public ModelAndView index(ModelAndView mav) {
 	mav.setViewName("index");
-	mav.addObject("msg","お名前を書いて送信して下さい");
+	mav.addObject("msg","currnt data.");
+	DataObject obj = new DataObject(123,"hanako","hanako@flower");
+	mav.addObject("object",obj);
 	return mav;
 }
 @RequestMapping(value="/",method=RequestMethod.POST)
