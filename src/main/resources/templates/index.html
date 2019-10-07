@@ -15,7 +15,10 @@
 <div class="container">
  <p th:text="#{content.message}"></p>
 <p th:text="${new java.util.Date().toString()}"></p>
-<p th:text="${msg}"></p>
+<div th:object="${object}">
+<p th:text="|My Name is *{name}. mail address is *{value}.|"></p>
+</div>
+<p th:utext="${msg}"></p>
 <form action="/" method="POST">
 <input type="text" name="text1" th:value="${value}">
 <input type="submit" value="Click" class="btn  btn-primary">

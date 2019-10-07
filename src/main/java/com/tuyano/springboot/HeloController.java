@@ -50,10 +50,19 @@ class DataObject{
 //	model.addAttribute("msg","total:" +res);
 //	return "index"; 
 //}
+@RequestMapping("/show/{id}")
+public ModelAndView show(@PathVariable int id,ModelAndView mav) {
+	mav.setViewName("show");
+	mav.addObject("id",id);
+	mav.addObject("check",id % 2 == 0);
+	mav.addObject("trueVal","Even number!");
+	mav.addObject("falseVal","Odd number...");
+	return mav;
+}
 @RequestMapping(value="/")
 public ModelAndView index(ModelAndView mav) {
 	mav.setViewName("index");
-	mav.addObject("msg","currnt data.");
+	mav.addObject("msg","message 1<hr>message 2<br>message 3");
 	DataObject obj = new DataObject(123,"hanako","hanako@flower");
 	mav.addObject("object",obj);
 	return mav;
