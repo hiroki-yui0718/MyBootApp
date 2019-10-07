@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+<title>Top Page</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}"></script>
+ </head>
+ <body>
+ <header class="navbar navbar-fixed-top bg-dark mb-4">
+  <div class="container">
+ <h1 th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</h1>
+ </div>
+ </header>
+<div class="container">
+ <p th:text="#{content.message}"></p>
+<p th:text="${new java.util.Date().toString()}"></p>
+<p th:text="${id} +' is '+(${check} ? ${trueVal} : ${falseVal})"></p>
+</div>
+</body>
+</html>
