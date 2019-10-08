@@ -2,6 +2,9 @@ package com.tuyano.springboot;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -63,8 +66,17 @@ public ModelAndView show(@PathVariable int id,ModelAndView mav) {
 public ModelAndView index(ModelAndView mav) {
 	mav.setViewName("index");
 	mav.addObject("msg","message 1<hr>message 2<br>message 3");
-	DataObject obj = new DataObject(123,"hanako","hanako@flower");
-	mav.addObject("object",obj);
+//	DataObject obj = new DataObject(123,"hanako","hanako@flower");
+//	mav.addObject("object",obj);
+//	ArrayList<String[]> data = new ArrayList<String[]>();
+//	data.add(new String[] {"taro","taro@yamada","080-999-999"});
+//	data.add(new String[] {"hanako","hanako@flower","080-888-888"});
+//	data.add(new String[] {"sachiko","sachiko@happy","090-999-999"});
+	ArrayList<DataObject> data = new ArrayList<DataObject>();
+	data.add(new DataObject (0,"taro","taro@yamada"));
+	data.add(new DataObject (1,"hanako","hanako@flower"));
+	data.add(new DataObject(2,"sachiko","sachiko@happy"));
+	mav.addObject("data",data);
 	return mav;
 }
 @RequestMapping(value="/",method=RequestMethod.POST)
@@ -81,5 +93,27 @@ public String other() {
 @RequestMapping("/home")
 public String home() {
 	return "forward:/";
+}
+@RequestMapping("/month/{month}")
+public ModelAndView show2(@PathVariable int month,ModelAndView mav) {
+	mav.setViewName("month");
+	int m = Math.abs(month) % 12;
+	m = m == 0 ? 12 : m;
+	mav.addObject("month",m);
+	mav.addObject("cehck",Math.floor(m/3));
+	return mav;
+}
+@RequestMapping("/dev/{num}")
+public ModelAndView dev(@PathVariable int num,ModelAndView mav) {
+	mav.setViewName("dev");
+	ArrayList<DataObject> data = new ArrayList<DataObject>();
+	data.add(new DataObject (0,"taro","taro@yamada"));
+	data.add(new DataObject (1,"hanako","hanako@flower"));
+	data.add(new DataObject(2,"sachiko","sachiko@happy"));
+	mav.addObject("data",data);
+	mav.addObject("num",num);
+	if(num>= 0) mav.addObject("check",num >= data.size() ? 0 : num);
+	else  mav.addObject("check",num>= data.size() * -1 ? 0 : num * -1);
+	return mav;
 }
 }
