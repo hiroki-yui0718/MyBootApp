@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+<title>Top Page</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}"></script>
+ <script th:inline="javascript">
+ function action(){
+	 var val = document.getElementById("text1").value;
+	 var res = parseInt(val * ((100 + /*[[${tax}]]*/) / 100));
+	 document.getElementById("msg").innerHTML = "include tax: " + res;
+ }
+ </script>
+ </head>
+ <body>
+ <header class="navbar navbar-fixed-top bg-dark mb-4">
+  <div class="container">
+ <h1 th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</h1>
+ </div>
+ </header>
+<div class="container">
+<p id="msg"></p>
+<input type="text" id="text1"/>
+<button onclick="action()">click</button>
+</div>
+</body>
+</html>

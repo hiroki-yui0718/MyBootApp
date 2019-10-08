@@ -116,4 +116,15 @@ public ModelAndView dev(@PathVariable int num,ModelAndView mav) {
 	else  mav.addObject("check",num>= data.size() * -1 ? 0 : num * -1);
 	return mav;
 }
+@RequestMapping("/tax/{tax}")
+public ModelAndView tax(@PathVariable int tax,ModelAndView mav) {
+	mav.setViewName("tax");
+	mav.addObject("tax",tax);
+	return mav;
+}
+@RequestMapping("/tmp")
+public ModelAndView tmp(ModelAndView mav) {
+	mav.setViewName("tmp");
+	return mav;
+}
 }
