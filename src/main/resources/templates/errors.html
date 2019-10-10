@@ -1,0 +1,5 @@
+<div th:fragment="frag_body">
+<ul class="card p-3 bg-light">
+<li class="ml-3" th:each="error : ${#fields.detailedErrors()}" th:text="${error.message}"/>
+</ul>
+</div>
