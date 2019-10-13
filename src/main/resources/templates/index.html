@@ -11,8 +11,10 @@
  <body>
  <header class="navbar navbar-fixed-top bg-dark mb-4">
   <div class="container">
- <h1 th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</h1>
- </div>
+ <a href="/index" th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</a>
+ <ul class="navbar list-inline" style="height:1rem;">
+ <li class="list-inline-item"><a href="/data">一覧</a></li>
+ </ul> </div>
  </header>
 <div class="container">
  <p th:text="#{content.message}"></p>
