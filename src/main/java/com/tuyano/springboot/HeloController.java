@@ -16,6 +16,8 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,6 +26,18 @@ import com.tuyano.springboot.repositories.MyDataRepository;
 
 @Controller
 public class HeloController {
+	
+	@Autowired
+	MyDataRepository repository;
+
+	@PersistenceContext
+	EntityManager entityManager; //
+
+	MyDataDaoImpl dao;
+	
+	@Autowired
+	private MyDataService service;
+	
 //@RequestMapping("/{num}")
 //public String index(@PathVariable int num) { //戻り地はString
 //	int su= 0;
@@ -141,23 +155,25 @@ public ModelAndView tmp(ModelAndView mav) {
 	mav.setViewName("tmp");
 	return mav;
 }
-@Autowired
-MyDataRepository repository;
 
-@PersistenceContext
-EntityManager entityManager;
 
-MyDataDaoImpl dao;
-
-@RequestMapping(value="/data",method=RequestMethod.GET)
+@RequestMapping(value="/page",method=RequestMethod.GET)
+public ModelAndView index(ModelAndView mav,Pageable pageable) {
+	mav.setViewName("index");
+	Page<MyData> list = repository.findAll(pageable);
+	mav.addObject("datalist",list);
+	return mav;
+	
+}
+@RequestMapping(value="/user/data",method=RequestMethod.GET)
 public ModelAndView data(@ModelAttribute("formModel") MyData mydata,ModelAndView mav) {
 	mav.setViewName("data");
 	mav.addObject("msg","MyData - Sample");
-	Iterable<MyData> list = dao.getAll();
+	Iterable<MyData> list = service.getAll(); //Hanpuku
 	mav.addObject("datalist",list);
 	return mav;
 }
-@RequestMapping(value="/data",method=RequestMethod.POST)
+@RequestMapping(value="/user/data",method=RequestMethod.POST)
 @Transactional(readOnly=false)
 public ModelAndView form(
 		@ModelAttribute("formModel")
@@ -202,7 +218,7 @@ public ModelAndView find(ModelAndView mav) {
 	mav.addObject("title","Find Page");
 	mav.addObject("msg","MyDataのサンプルです");
 	mav.addObject("value","");
-	Iterable<MyData> list = dao.getAll();
+	Iterable<MyData> list = service.getAll();
 	mav.addObject("datalist",list);
 	return mav;
 }
@@ -215,8 +231,8 @@ public ModelAndView search(ModelAndView mav,HttpServletRequest request) {
 	}else {
 		mav.addObject("title","Find Result");
 		mav.addObject("msg","「" + param + "」の検索結果");
-		mav.addObject("value",param);
-		List<MyData> list = dao.find(param);
+		mav.addObject("value",param); //消さないため
+		List<MyData> list = service.find(param);
 		mav.addObject("datalist",list);
 	}
 	return mav;

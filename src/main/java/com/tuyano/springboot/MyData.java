@@ -1,5 +1,11 @@
 package com.tuyano.springboot;
 
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,8 +21,24 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="mydata")
+@NamedQuery(
+	name="findWithName",
+	query = "from MyData where name like :fname"
+)
 public class MyData {
-
+	
+	@OneToMany(cascade=CascadeType.ALL)
+	@Column(nullable =true)
+	private List<MsgData> msgdatas;
+	
+	public List<MsgData> getMsgdatas(){
+		return msgdatas;
+	}
+	public void setMsgdatas() {
+		this.msgdatas = msgdatas;
+	}
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column

@@ -20,7 +20,7 @@
 </form>
 <table th:inline="text" class="mt-3 table table-hover">
 <thead class="thead-dark">
-<tr><th>NAME</th><th>E-MAIL</th><th>TEL</th></tr>
+<tr><th>ID</th><th>NAME</th><th>EMAIL</th></tr>
 </thead>
 <tbody th:each="obj:${data}">
 <tr><td>[[${obj.id}]]</td><td>[[${obj.name}]]</td><td>[[${obj.value}]]</td></tr>
