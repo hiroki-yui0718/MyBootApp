@@ -1,4 +1,4 @@
-package com.tuyano.springboot;
+package com.tuyano.springboot.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -22,7 +22,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tuyano.springboot.MyDataDaoImpl;
+import com.tuyano.springboot.model.MyData;
 import com.tuyano.springboot.repositories.MyDataRepository;
+import com.tuyano.springboot.service.MyDataService;
 
 @Controller
 public class HeloController {

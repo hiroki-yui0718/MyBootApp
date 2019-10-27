@@ -3,37 +3,32 @@ package com.tuyano.springboot.service;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.tuyano.springboot.model.User;
+import com.tuyano.springboot.model.Account;
 
-public class ReservationUserDetails implements UserDetails {
+public class AccountUserDetails implements UserDetails {
 	
-	private final User user;
+	private final Account account;
+	private final Collection<GrantedAuthority> authorities;
 	
-	public ReservationUserDetails(User user) {
+	public AccountUserDetails(Account account,Collection<GrantedAuthority> authorities) {
 		// TODO 自動生成されたコンストラクター・スタブ
-		this.user = user;
+		this.account = account;
+		this.authorities = authorities;
 	}
-	public User getUser() {
-		return user;
+	public String getPassword() {
+		return account.getPassword();
 	}
 	@Override
 	public String getUsername() {
-		return this.user.getUserId();
-	}
-
-	@Override
-	public String getPassword() {
-		// TODO 自動生成されたメソッド・スタブ
-		return this.user.getPassword();
+		return account.getUserName();
 	}
 
 	@Override
 	public boolean isEnabled() {
 		// TODO 自動生成されたメソッド・スタブ
-		return true;
+		return account.isEnabled();
 	}
 
 	@Override
@@ -57,6 +52,9 @@ public class ReservationUserDetails implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO 自動生成されたメソッド・スタブ
-		return AuthorityUtils.createAuthorityList("ROLE_" + this.user.getRoleName().name());
+		return authorities;
+	}
+	public Account getAccount() {
+		return account;
 	}
 }

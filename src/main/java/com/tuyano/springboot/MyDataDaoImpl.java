@@ -7,6 +7,8 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
+import com.tuyano.springboot.model.MyData;
+
 @Repository
 public class MyDataDaoImpl implements MyDataDao<MyData> {
 	private static final long serialVersionUID = 1L;

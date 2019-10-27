@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Repository;
 
+import com.tuyano.springboot.model.MsgData;
+
 @SuppressWarnings("rawtypes")
 @Repository
 public class MsgDataDaoImpl implements MsgDataDao<MsgDataDao> {

@@ -1,4 +1,4 @@
-package com.tuyano.springboot;
+package com.tuyano.springboot.model;
 
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;

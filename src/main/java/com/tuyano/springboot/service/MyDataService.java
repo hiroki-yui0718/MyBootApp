@@ -1,4 +1,4 @@
-package com.tuyano.springboot;
+package com.tuyano.springboot.service;
 
 import java.util.List;
 
@@ -11,6 +11,8 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import com.tuyano.springboot.model.MyData;
 
 @Service
 public class MyDataService {

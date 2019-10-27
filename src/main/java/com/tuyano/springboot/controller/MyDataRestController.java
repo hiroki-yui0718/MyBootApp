@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tuyano.springboot.MyDataService;
 import com.tuyano.springboot.MySampleBean;
+import com.tuyano.springboot.model.MyData;
+import com.tuyano.springboot.service.MyDataService;
 
 @RestController
 public class MyDataRestController {
