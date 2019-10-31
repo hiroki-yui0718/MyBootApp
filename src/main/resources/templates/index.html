@@ -14,10 +14,6 @@
  <p th:text="#{content.message}"></p>
 <p th:text="${new java.util.Date().toString()}"></p>
 <p th:utext="${msg}"></p>
-<form action="/" method="POST">
-<input type="text" name="text1" th:value="${value}">
-<input type="submit" value="Click" class="btn  btn-primary">
-</form>
 <table th:inline="text" class="mt-3 table table-hover">
 <thead class="thead-dark">
 <tr><th>ID</th><th>NAME</th><th>EMAIL</th></tr>

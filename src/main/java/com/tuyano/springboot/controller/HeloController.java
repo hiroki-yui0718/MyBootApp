@@ -93,7 +93,7 @@ public ModelAndView show(@PathVariable int id,ModelAndView mav) {
 	mav.addObject("falseVal","Odd number...");
 	return mav;
 }
-@RequestMapping(value="/")
+@RequestMapping("/")
 public ModelAndView index(ModelAndView mav) {
 	mav.setViewName("index");
 	mav.addObject("msg","message 1<hr>message 2<br>message 3");
@@ -111,9 +111,7 @@ public ModelAndView index(ModelAndView mav) {
 	return mav;
 }
 @RequestMapping(value="/",method=RequestMethod.POST)
-public ModelAndView send(@RequestParam("text1") String str,ModelAndView mav){ //メソッド名は適当
-	mav.addObject("msg","こんにちは,"+str+"さん!!");
-	mav.addObject("value",str);
+public ModelAndView send(ModelAndView mav){ //メソッド名は適当
 	mav.setViewName("index");
 	return mav;
 }
