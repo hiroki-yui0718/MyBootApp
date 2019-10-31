@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 public class ClientSide {
-	public void runSample() {
+	public void runSample(String line) {
 
 		Socket cSocket = null;
 		BufferedReader csInput = null;
@@ -16,8 +16,8 @@ public class ClientSide {
 			cSocket = new Socket("127.0.0.1", 8765);
 
 			//クライアント側での入力用
-			csInput = new BufferedReader
-					(new InputStreamReader(System.in));
+//			csInput = new BufferedReader
+//					(new InputStreamReader(System.in));
 			
 			//クライアント側からサーバへの送信用
 			writer = new PrintWriter
@@ -29,16 +29,15 @@ public class ClientSide {
 							(cSocket.getInputStream()));
 
 			//無限ループ　byeの入力でループを抜ける
-			String line = null;
+//			String line = null;
 			while (true) {
 				System.out.println("-------------------");
 				System.out.println("偶数の数値を入力して下さい");
 				System.out.println("-------------------");
 
 //	        	line = csInput.readLine();
-	        	
 				//送信用の文字を送信
-				writer.println("Hello");
+				writer.println(line);
 				
 				//byeの入力でループを抜ける
 				if (line.equals("bye")) {
