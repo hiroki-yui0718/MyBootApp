@@ -11,11 +11,14 @@
  <body>
 <div th:include="header :: data"></div>
 <div class="container">
- <p th:text="#{content.message}"></p>
- <form action="#" th:action="data" method="get" th:object="${formModel}">
- <label for="line">Send To</label>
- <input type="text" class="form-control" name="data" th:value=":{line}">
- </form>
+<p th:text="#{content.message}"></p>
+<form action="#" th:action="@{/line}" method="post">
+<label for="line">偶数の数値を入力して下さい</label>
+<input type="text" class="form-control" name="data">
+<input type="submit" class="btn btn-block mt-3 btn-primary">
+</form>
+<p class="border-top pt-5">Return<p>
+<p th:text="${msg}"></p>
 </div>
 </body>
 </html>
