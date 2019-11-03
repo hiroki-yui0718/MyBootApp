@@ -1,6 +1,6 @@
 package com.tuyano.springboot.controller;
 
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import com.tuyano.springboot.model.Suica;
 import com.tuyano.springboot.repositories.SuicaRepository;
 import com.tuyano.springboot.service.SuicaService;
 import com.tuyano.springboot.socket.*;
-
 @Controller
 public class ServerController {
 
@@ -27,23 +26,29 @@ public class ServerController {
 		mav.setViewName("server");
 		ServerSide s1 = new ServerSide();
 		String line = s1.runSample();
-		
 		Suica suica = new Suica();
-		suica.setId(line);
-		ZonedDateTime d = ZonedDateTime.now();
-		suica.setDate(d);
-		suica.setState(true);
+		Suica state = service.find(line);
+		ZonedDateTime t1 = ZonedDateTime.now();
+		ZonedDateTime t2 = state.getDate();
+		Duration t = Duration.between(t1,t2);
+		long sumTime = t.toHours();
+		if(state.getState().equals("出勤")) {
+			suica.setIdm(line);
+			suica.setState("退勤");
+			suica.setTime(sumTime);
+			mav.addObject("msg",line + "さんの退勤を受け付けました");
+		}else {
+			suica.setIdm(line);
+			suica.setState("出勤");
+			suica.setTime(0);
+			mav.addObject("msg",line + "さんの出勤を受け付けました");
+		}
+		suica.setDate(t1);
+		repository.saveAndFlush(suica);
+		
 		List<Suica> list = service.getAll();
 		mav.addObject("datalist",list);
-		mav.addObject("state","出勤");
-		mav.addObject("time","2019");
 		return mav;
 	}
-//	@RequestMapping("/show_id")
-//	public ModelAndView send(ModelAndView mav) {
-//		List<Suica> list = service.findId();
-//		mav.addObject("datalist",list);
-//		return mav;
-//	}
 
 }

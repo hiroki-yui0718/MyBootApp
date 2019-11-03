@@ -18,10 +18,7 @@ public class SuicaService {
 	public List<Suica> getAll() {
 		return (List<Suica>)entityManager.createQuery("from Suica").getResultList();
 	}
-	public String findState(String id) {
-		return entityManager.createQuery("select state from Suica where id = :id").setParameter("id", id).get
-	}
-	public ZonedDateTime find() {
-		return entityManager.createQuery("from Suica").getResultList();
+	public Suica find(String idm) {
+		return (Suica)entityManager.createQuery("from Suica where idm = :idm desc limit 1").setParameter("idm", idm).getSingleResult();
 	}
 }

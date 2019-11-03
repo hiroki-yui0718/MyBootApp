@@ -4,24 +4,42 @@ import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="suica")
 public class Suica {
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private String id;
-	private ZonedDateTime date;
-	private String state;
-	private ZonedDateTime time;
+	@NotNull
+	private long id;
 	
-	public void setId(String id) {
+	@Column
+	private String idm;
+	@Column
+	private ZonedDateTime date;
+	@Column
+	private String state;
+	@Column
+	private long time;
+	
+
+	public void setId(long id) {
 		this.id = id;
 	}
-	public String getId() {
+	public long getId() {
 		return id;
+	}
+	public void setIdm(String idm) {
+		this.idm = idm;
+	}
+	public String getIdm() {
+		return idm;
 	}
 	public void setDate(ZonedDateTime date) {
 		this.date = date;
@@ -35,10 +53,10 @@ public class Suica {
 	public String getState() {
 		return state;
 	}
-	public void setTime(ZonedDateTime time) {
+	public void setTime(long time) {
 		this.time = time;
 	}
-	public ZonedDateTime getTime() {
+	public long getTime() {
 		return time;
 	}	
 	
