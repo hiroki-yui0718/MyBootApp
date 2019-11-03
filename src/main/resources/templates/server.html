@@ -11,7 +11,10 @@
  <body>
 <div th:include="header :: data"></div>
 <div class="container">
- <p th:text="${msg}"></p>
+<table class="table">
+<tr><th>ID</th><th>日時</th><th>状態</th><th>勤務時間</th></tr>
+ <tr th:each="obj:${datalist}"><td th:text="${obj.id}"></td><td th:text="${obj.date}"></td><td th:text="${state}"></td><td th:text="${time}"></td></tr>
+ </table>
 </div>
 </body>
 </html>
