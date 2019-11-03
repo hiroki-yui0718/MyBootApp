@@ -42,9 +42,11 @@ public class ServerSide {
 					socket.getOutputStream(), true);
 
 			//無限ループ　byeの入力でループを抜ける
-
-				line = reader.readLine();
-
+				
+				while(true) {
+					line = reader.readLine();
+					if(line != null || !(line.equals("")))break;
+				}
 				System.out.println("クライアントで入力された文字＝" + line);
 
 

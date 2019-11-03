@@ -5,8 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.tuyano.springboot.model.Suica;
+import org.springframework.stereotype.Service;
 
+import com.tuyano.springboot.model.Suica;
+@Service
 public class SuicaService {
 	@PersistenceContext
 	EntityManager entityManager;
