@@ -37,7 +37,7 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 		}else {
 			
 
-		return new User(username, this.passwordEncoder.encode(account.getPassword()), Collections.emptySet());
+		return new User(username, account.getPassword(), Collections.emptySet());
 		}
 	}
 }
