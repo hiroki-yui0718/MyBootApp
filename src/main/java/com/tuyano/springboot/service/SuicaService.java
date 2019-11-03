@@ -1,6 +1,5 @@
 package com.tuyano.springboot.service;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -19,6 +18,6 @@ public class SuicaService {
 		return (List<Suica>)entityManager.createQuery("from Suica").getResultList();
 	}
 	public Suica find(String idm) {
-		return (Suica)entityManager.createQuery("from Suica where idm = :idm desc limit 1").setParameter("idm", idm).getSingleResult();
+		return (Suica)entityManager.createQuery("from Suica where idm = :idm order by id desc").setParameter("idm", idm).setMaxResults(1).getSingleResult();
 	}
 }

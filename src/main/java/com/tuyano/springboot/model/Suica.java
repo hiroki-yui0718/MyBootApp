@@ -1,7 +1,4 @@
 package com.tuyano.springboot.model;
-
-import java.time.ZonedDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,11 +15,10 @@ public class Suica {
 	@Column
 	@NotNull
 	private long id;
-	
 	@Column
 	private String idm;
 	@Column
-	private ZonedDateTime date;
+	private String date;
 	@Column
 	private String state;
 	@Column
@@ -41,10 +37,10 @@ public class Suica {
 	public String getIdm() {
 		return idm;
 	}
-	public void setDate(ZonedDateTime date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
-	public ZonedDateTime getDate() {
+	public String getDate() {
 		return date;
 	}	
 	public void setState(String state) {
