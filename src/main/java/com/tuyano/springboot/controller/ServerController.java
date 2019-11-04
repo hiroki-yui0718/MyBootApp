@@ -48,8 +48,8 @@ public class ServerController {
 			Suica suica = new Suica();
 			Suica state = service.find(line);
 			LocalDateTime t2 = state.getDate();
-			Duration t = Duration.between(t1,t2);
-			long sumTime = t.toMinutes();
+			Duration t = Duration.between(t2,t1);
+			long sumTime = t.toSeconds();
 			if(state.getState().equals("出勤")) {
 				suica.setIdm(line);
 				suica.setState("退勤");
