@@ -25,10 +25,6 @@ public class AuthenticationController {
 	PasswordEncoder passwordEncoder;
 	@PostConstruct
 	public void init(){
-		Account d1 = new Account();
-		d1.setUsername("yui");
-		d1.setPassword("password");
-		repository.saveAndFlush(d1);
 	}
 	
 	@RequestMapping(value="/login")

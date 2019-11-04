@@ -47,7 +47,7 @@ public class ServerSide {
 					line = reader.readLine();
 					if(line != null || !(line.equals("")))break;
 				}
-				System.out.println("クライアントで入力された文字＝" + line);
+				System.out.println("クライアントで入力された文字＝Suica detected. idm = " + line);
 
 
 		}catch(Exception e){

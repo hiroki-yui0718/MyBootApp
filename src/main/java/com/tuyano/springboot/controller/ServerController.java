@@ -38,31 +38,31 @@ public class ServerController {
 			mav.setViewName("server");
 			ServerSide s1 = new ServerSide();
 			String line = s1.runSample();
+//			Suica suica1 = new Suica();
+			LocalDateTime t1 = LocalDateTime.now();
+//			suica1.setIdm(line);
+//			suica1.setDate(t1);
+//			suica1.setState("退勤");
+//			suica1.setTime(0);
+//			repository.saveAndFlush(suica1);
 			Suica suica = new Suica();
-			String t1 = LocalDateTime.now().toString();
-
-			suica.setIdm("01010312ea13a007");
-			suica.setDate(t1);
-			suica.setState("退勤");
-			suica.setTime(0);
-			repository.saveAndFlush(suica);
 			Suica state = service.find(line);
-//			ZonedDateTime t2 = state.getDate();
-//			Duration t = Duration.between(t1,t2);
-//			long sumTime = t.toHours();
-//			if(state.getState().equals("出勤")) {
-//				suica.setIdm(line);
-//				suica.setState("退勤");
-////				suica.setTime(0);
-//				mav.addObject("msg",line + "さんの退勤を受け付けました");
-//			}else {
-//				suica.setIdm(line);
-//				suica.setState("出勤");
-////				suica.setTime(0);
-//				mav.addObject("msg",line + "さんの出勤を受け付けました");
-//			}
-//			suica.setDate(t1);
-//			repository.saveAndFlush(suica);
+			LocalDateTime t2 = state.getDate();
+			Duration t = Duration.between(t1,t2);
+			long sumTime = t.toMinutes();
+			if(state.getState().equals("出勤")) {
+				suica.setIdm(line);
+				suica.setState("退勤");
+				suica.setTime(sumTime);
+				mav.addObject("msg",line + "さんの退勤を受け付けました");
+			}else {
+				suica.setIdm(line);
+				suica.setState("出勤");
+				suica.setTime(0);
+				mav.addObject("msg",line + "さんの出勤を受け付けました");
+			}
+			suica.setDate(t1);
+			repository.saveAndFlush(suica);
 		}catch(HsqlException e) {
 			System.out.println(e.getErrorCode());
 		}

@@ -15,7 +15,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception{
 		//x認証設定を書く方
 		http.formLogin().loginPage("/login").successForwardUrl("/").permitAll();
-		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/").permitAll().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/").permitAll().antMatchers("/signup").permitAll().anyRequest().authenticated();
 	}
 	@Bean
 	public PasswordEncoder passwordEncoder() {

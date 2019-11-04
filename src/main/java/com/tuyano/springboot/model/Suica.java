@@ -1,4 +1,7 @@
 package com.tuyano.springboot.model;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +21,7 @@ public class Suica {
 	@Column
 	private String idm;
 	@Column
-	private String date;
+	private LocalDateTime date;
 	@Column
 	private String state;
 	@Column
@@ -37,10 +40,10 @@ public class Suica {
 	public String getIdm() {
 		return idm;
 	}
-	public void setDate(String date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
-	public String getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}	
 	public void setState(String state) {
