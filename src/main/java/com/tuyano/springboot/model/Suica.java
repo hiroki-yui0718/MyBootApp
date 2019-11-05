@@ -1,6 +1,6 @@
 package com.tuyano.springboot.model;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +25,7 @@ public class Suica {
 	@Column
 	private String state;
 	@Column
-	private long time;
+	private LocalTime time;
 	
 
 	public void setId(long id) {
@@ -52,10 +52,10 @@ public class Suica {
 	public String getState() {
 		return state;
 	}
-	public void setTime(long time) {
+	public void setTime(LocalTime time) {
 		this.time = time;
 	}
-	public long getTime() {
+	public LocalTime getTime() {
 		return time;
 	}	
 	
