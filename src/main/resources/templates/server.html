@@ -17,7 +17,7 @@
 <tr><th>No.</th><th>IDm</th><th>日時</th><th>状態</th><th>勤務時間</th><th>総勤務時間</th></tr>
 </thead>
 <tbody>
- <tr th:each="obj:${datalist}"><td th:text="${obj.id}"></td><td th:text="${obj.idm}"></td><td th:text="${obj.date}"></td><td th:text="${obj.state}"></td><td th:text="${obj.time}"></td><td></td></tr>
+ <tr th:each="obj:${datalist}"><td th:text="${obj.id}"></td><td th:text="${obj.idm}"></td><td th:text="${obj.date}"></td><td th:text="${obj.state}"></td><td th:text="${obj.time}"></td><td th:text="${sumTime}"></td></tr>
  </tbody>
  </table>
 </div>
