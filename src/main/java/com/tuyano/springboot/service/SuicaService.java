@@ -17,6 +17,9 @@ public class SuicaService {
 	public List<Suica> getAll() {
 		return (List<Suica>)entityManager.createQuery("from Suica order by id desc").getResultList();
 	}
+	public long findIdm(String idm) {
+		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm").setParameter("idm", idm).getSingleResult();
+	}
 	public Suica find(String idm) {
 		return (Suica)entityManager.createQuery("from Suica where idm = :idm order by id desc").setParameter("idm", idm).setMaxResults(1).getSingleResult();
 	}
