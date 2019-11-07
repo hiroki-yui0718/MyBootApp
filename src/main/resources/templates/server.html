@@ -23,8 +23,8 @@
  <td th:text="${obj.idm}"></td>
  <td th:text="${obj.date}"></td>
   <td th:text="${obj.state}"></td>
- <td th:text="${obj.dayTime}"></td>
- <td th:text="${obj.monthTime}"></td></tr>
+  <td th:text="${obj.dayTime eq if}? '----' : ${obj.dayTime}"></td>
+  <td th:text="${obj.monthTime eq if}? '----' : ${obj.monthTime}"></td>
  </tbody>
  </table>
 </div>

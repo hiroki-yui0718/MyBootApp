@@ -42,7 +42,12 @@ public class ServerController {
 		Suica suica = new Suica();
 		LocalDateTime t1 = LocalDateTime.now();
 		long num = service.findIdm(line);
-
+		if(service.findName(line) != null) {
+			String name = service.findName(line);
+			mav.addObject("name",name);
+		}else {
+			mav.addObject("name","-----");
+		}
 		if(num == 0) {		
 			suica.setIdm(line);
 			suica.setDate(t1);
@@ -92,14 +97,7 @@ public class ServerController {
 		repository.saveAndFlush(suica);
 		List<Suica> list = service.getAll();
 		mav.addObject("datalist",list);
-		if(service.findName(line) != null) {
-			String name = service.findName(line);
-			mav.addObject("name",name);
-		}else {
-			mav.addObject("name","-----");
-		}
-		
-		
+		mav.addObject("if",date(0));
 		return mav;
 	}
 
