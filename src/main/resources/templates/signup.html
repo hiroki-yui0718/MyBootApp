@@ -16,6 +16,8 @@
  <div class="col-md-6 offset-md-3">
  <h3>Sign Up</h3>
  <form action="#" th:action="@{/signup}" th:object="${formModel}" method="post">
+  <label for="idm">IDm</label>
+ <input type="text" name="idm" th:value="${idm}" class="form-control">
  <label for="username">Name</label>
  <input type="text" name="username" class="form-control">
   <label for="password">Password</label>

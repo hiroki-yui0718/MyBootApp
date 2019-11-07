@@ -25,7 +25,15 @@ public class Suica {
 	@Column
 	private String state;
 	@Column
-	private LocalTime time;
+	private int year;
+	@Column
+	private int month;
+	@Column
+	private int day;
+	@Column
+	private LocalTime dayTime;
+	@Column
+	private LocalTime monthTime;
 
 	public void setId(long id) {
 		this.id = id;
@@ -51,11 +59,36 @@ public class Suica {
 	public String getState() {
 		return state;
 	}
-	public void setTime(LocalTime time) {
-		this.time = time;
+	
+	public void setYear(int year) {
+		this.year = year;
 	}
-	public LocalTime getTime() {
-		return time;
+	public int getYear() {
+		return year;
+	}
+	public void setMonth(int month) {
+		this.month = month;
+	}
+	public int getMonth() {
+		return month;
+	}
+	public void setDay(int day) {
+		this.day = day;
+	}
+	public int getDay() {
+		return day;
+	}
+	public void setDayTime(LocalTime dayTime) {
+		this.dayTime = dayTime;
+	}
+	public LocalTime getDayTime() {
+		return dayTime;
+	}
+	public void setMonthTime(LocalTime monthTime) {
+		this.monthTime = monthTime;
+	}
+	public LocalTime getMonthTime() {
+		return monthTime;
 	}
 	
 }

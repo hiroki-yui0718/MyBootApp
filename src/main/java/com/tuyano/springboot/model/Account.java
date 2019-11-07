@@ -13,9 +13,17 @@ import javax.validation.constraints.NotNull;
 public class Account {
 	@Id
 	@Column
+	private String idm;
+	@Column
 	private String username;
 	@Column
 	private String password;
+	public void setIdm(String idm) {
+		this.idm = idm;
+	}
+	public String getIdm() {
+		return idm;
+	}
 	public void setUsername(String username) {
 		this.username = username;
 	}

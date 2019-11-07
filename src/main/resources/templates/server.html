@@ -14,10 +14,17 @@
 <p th:text="${msg}"></p>
 <table class="table tbale-hover">
 <thead class="thead-dark">
-<tr><th>No.</th><th>IDm</th><th>日時</th><th>状態</th><th>勤務時間</th><th>総勤務時間</th></tr>
+<tr><th>No.</th><th>名前</th><th>IDm</th><th>日時</th><th>状態</th><th>勤務時間</th><th>総勤務時間</th></tr>
 </thead>
 <tbody>
- <tr th:each="obj:${datalist}"><td th:text="${obj.id}"></td><td th:text="${obj.idm}"></td><td th:text="${obj.date}"></td><td th:text="${obj.state}"></td><td th:text="${obj.time}"></td><td th:text="${sumTime}"></td></tr>
+ <tr th:each="obj:${datalist}">
+ <td th:text="${obj.id}"></td>
+ <td th:text="${name}"></td>
+ <td th:text="${obj.idm}"></td>
+ <td th:text="${obj.date}"></td>
+  <td th:text="${obj.state}"></td>
+ <td th:text="${obj.dayTime}"></td>
+ <td th:text="${obj.monthTime}"></td></tr>
  </tbody>
  </table>
 </div>

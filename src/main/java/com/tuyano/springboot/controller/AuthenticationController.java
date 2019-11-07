@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tuyano.springboot.model.Account;
 import com.tuyano.springboot.repositories.AccountRepository;
+import com.tuyano.springboot.socket.ServerSide;
 
 @Controller
 public class AuthenticationController {
@@ -33,6 +34,9 @@ public class AuthenticationController {
 	}
 	@RequestMapping(value="/signup",method=RequestMethod.GET)
 	public ModelAndView signup(ModelAndView mav) {
+		ServerSide s1 = new ServerSide();
+		String line = s1.runSample();
+		mav.addObject("idm",line);
 		mav.setViewName("signup");
 		return mav;
 		
@@ -40,10 +44,12 @@ public class AuthenticationController {
 	@RequestMapping(value="/signup",method=RequestMethod.POST)
 	public ModelAndView send(Account account,HttpServletRequest request,ModelAndView mav) {
 		mav.setViewName("signup");
+		String idm = request.getParameter("idm");
 		String username = request.getParameter("username");
 		String str1 = request.getParameter("password");
 		String str2 = request.getParameter("password-con");
 		if(str1.equals(str2)) {
+			account.setIdm(idm);
 			account.setUsername(username);
 			account.setPassword(passwordEncoder.encode(str1));
 			repository.saveAndFlush(account);
