@@ -26,17 +26,14 @@ public class SuicaService {
 	public Suica find(String idm) {
 		return (Suica)entityManager.createQuery("from Suica where idm = :idm order by id desc").setParameter("idm", idm).setMaxResults(1).getSingleResult();
 	}
-	public long findSumTime(String idm,int month,int year) {
-		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm and month = :month and year = :year")
-				.setParameter("idm", idm).setParameter("month", month).setParameter("year", year).getSingleResult();
-	}
+
 	public String findName(String idm) {
 		return (String)entityManager.createQuery("select username from Account where idm = :idm").setParameter("idm", idm).getSingleResult();
 	}
-	public int getSumTime(String idm,int month,int year,int day,int sec) {
-		// TODO 自動生成されたメソッド・スタブ
-		return (int)entityManager.createQuery("select monthTime from Suica WHERE idm = :idm and month = :month and year = :year") 
-		.setParameter("sec",sec).setParameter("idm", idm).setParameter("month", month).setParameter("year", year).getSingleResult();
-		
+	public Suica findDay(String idm) {
+		return (Suica)entityManager.createQuery("from Suica where idm = :idm and state = :state order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
+	}
+	public long findState(String idm) {
+		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm and state = :state").setParameter("idm", idm).setParameter("state", "退勤").getSingleResult();
 	}
 }

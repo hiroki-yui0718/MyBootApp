@@ -65,21 +65,26 @@ public class ServerController {
 			if(state.getState().equals("出勤")) {
 				suica.setIdm(line);
 				suica.setState("退勤");
-		
+				suica.setYear(t1.getYear());
+				suica.setMonth(t1.getMonthValue());
+				suica.setDay(t1.getDayOfMonth());
 				mav.addObject("msg",line + "さんの退勤を受け付けました");
-				long su = service.findSumTime(line,t1.getDayOfYear(),t1.getDayOfMonth());
-				if(su == 0) {
-					suica.setYear(t1.getDayOfYear());
-					suica.setMonth(t1.getDayOfMonth());
+				//初退勤じゃない時
+				if(service.findState(line) != 0) {
+					Suica s = service.findDay(line);
+					int mSumTime = s.getMonthTime().toSecondOfDay() + sec;
+					if(t1.getMonthValue() != s.getMonth()) { //月初め
+						suica.setDayTime(date(sec));
+						suica.setMonthTime(date(sec));
+					}else{ //日初め or 同日
+						suica.setDayTime(date(sec));
+						suica.setMonthTime(date(mSumTime));
+					}
+				}else {
 					suica.setDayTime(date(sec));
 					suica.setMonthTime(date(sec));
-				}else {
-					int sum = service.getSumTime(line,t1.getYear(),t1.getMonthValue(),t1.getDayOfMonth(),sec);
-					suica.setYear(t1.getDayOfYear());
-					suica.setMonth(t1.getDayOfMonth());
-					suica.setDayTime(date(sec));
-					suica.setMonthTime(date(sec + sum));
 				}
+
 			}else {
 				suica.setIdm(line);
 				suica.setState("出勤");
@@ -90,8 +95,8 @@ public class ServerController {
 				mav.addObject("msg",line + "さんの出勤を受け付けました");
 			}
 			suica.setDate(t1);
-			
-			
+
+
 
 		}
 		repository.saveAndFlush(suica);
