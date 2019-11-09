@@ -1,21 +1,33 @@
 package com.tuyano.springboot.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name="account")
 public class Account {
+	
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private List<Suica> suicas;
+	
+	public void setSuicas(List<Suica> suicas) {
+		this.suicas = suicas;
+	}
+	public List<Suica> getSuicas(){
+		return suicas;
+	}
 	@Id
 	@Column
-	private String idm;
-	@Column
 	private String username;
+	@Column
+	private String idm;
 	@Column
 	private String password;
 	public void setIdm(String idm) {

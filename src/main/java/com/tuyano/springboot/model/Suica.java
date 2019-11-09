@@ -2,11 +2,14 @@ package com.tuyano.springboot.model;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -25,15 +28,17 @@ public class Suica {
 	@Column
 	private String state;
 	@Column
-	private int year;
-	@Column
-	private int month;
-	@Column
-	private int day;
-	@Column
 	private LocalTime dayTime;
 	@Column
 	private LocalTime monthTime;
+
+	@ManyToOne
+	private Account account;
+	
+	public Suica() {
+		super();
+		account =new Account();
+	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -59,25 +64,6 @@ public class Suica {
 	public String getState() {
 		return state;
 	}
-	
-	public void setYear(int year) {
-		this.year = year;
-	}
-	public int getYear() {
-		return year;
-	}
-	public void setMonth(int month) {
-		this.month = month;
-	}
-	public int getMonth() {
-		return month;
-	}
-	public void setDay(int day) {
-		this.day = day;
-	}
-	public int getDay() {
-		return day;
-	}
 	public void setDayTime(LocalTime dayTime) {
 		this.dayTime = dayTime;
 	}
@@ -90,5 +76,10 @@ public class Suica {
 	public LocalTime getMonthTime() {
 		return monthTime;
 	}
-	
+	public Account getAccount(){
+		return account;
+	}
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 }
