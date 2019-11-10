@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name="account")
 public class Account {
 	
-	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "account")
 	private List<Suica> suicas;
 	
 	public void setSuicas(List<Suica> suicas) {
@@ -23,11 +23,11 @@ public class Account {
 	public List<Suica> getSuicas(){
 		return suicas;
 	}
+	@Column
+	private String idm;
 	@Id
 	@Column
 	private String username;
-	@Column
-	private String idm;
 	@Column
 	private String password;
 	public void setIdm(String idm) {

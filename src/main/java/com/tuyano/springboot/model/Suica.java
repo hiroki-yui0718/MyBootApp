@@ -19,7 +19,6 @@ public class Suica {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	@NotNull
 	private long id;
 	@Column
 	private String idm;
