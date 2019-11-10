@@ -35,14 +35,15 @@ public class ServerController {
 	}
 	@RequestMapping("/server")
 	public ModelAndView server(ModelAndView mav) {
-
+		ClientSide c = new ClientSide();
 		mav.setViewName("server");
 		ServerSide s1 = new ServerSide();
 		String line = s1.runSample();
 		Suica suica = new Suica();
 		LocalDateTime t1 = LocalDateTime.now();
 		long num = service.findIdm(line);
-		if(num == 0) {		
+		if(num == 0) {
+			c.runSample("登録");
 			suica.setIdm(line);
 			suica.setDate(t1);
 			suica.setState("登録");
@@ -57,6 +58,7 @@ public class ServerController {
 			if(state.getState().equals("出勤")) {
 				suica.setIdm(line);
 				suica.setState("退勤");
+				c.runSample("退勤");
 				mav.addObject("msg",line + "さんの退勤を受け付けました");
 				//初退勤じゃない時
 				if(service.findState(line) != 0) {
@@ -66,7 +68,7 @@ public class ServerController {
 						suica.setMonthTime(date(sec));
 					}else{ //日初め or 同日
 						LocalTime m = service.findMonthTime(line);
-						int mSumTime = m.getSecond() + sec;
+						int mSumTime = m.toSecondOfDay() + sec;
 						suica.setDayTime(date(sec));
 						suica.setMonthTime(date(mSumTime));
 					}
@@ -80,6 +82,7 @@ public class ServerController {
 				suica.setState("出勤");
 				suica.setDayTime(date(0));
 				suica.setMonthTime(date(0));
+				c.runSample("出勤");
 				mav.addObject("msg",line + "さんの出勤を受け付けました");
 			}
 			suica.setDate(t1);

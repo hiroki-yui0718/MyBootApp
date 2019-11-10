@@ -14,11 +14,8 @@ public class ClientSide {
 
 		try{
 			//IPアドレスとポート番号を指定してクライアント側のソケットを作成
-			cSocket = new Socket("127.0.0.1", 8765);
+			cSocket = new Socket("192.168.3.10", 8765);
 
-			//クライアント側での入力用
-//			csInput = new BufferedReader
-//					(new InputStreamReader(System.in));
 			
 			//クライアント側からサーバへの送信用
 			writer = new PrintWriter
@@ -29,25 +26,7 @@ public class ClientSide {
 					(new InputStreamReader
 							(cSocket.getInputStream()));
 
-			//無限ループ　byeの入力でループを抜ける
-//			String line = null;
-//				System.out.println("-------------------");
-//				System.out.println("偶数の数値を入力して下さい");
-//				System.out.println("-------------------");
-
-//	        	line = csInput.readLine();
-				//送信用の文字を送信
 				writer.println(line);
-				
-				//byeの入力でループを抜ける
-//				if (line.equals("bye")) {
-//					break;
-//				}
-				
-				//サーバ側からの受取の結果を表示
-				send = "サーバーからの回答：" + reader.readLine(); 
-//				System.out.println
-//					("サーバーからの回答：" + reader.readLine());
 			
 		}catch(Exception e){
 			e.printStackTrace();
