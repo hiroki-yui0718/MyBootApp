@@ -33,9 +33,9 @@ public class SuicaService {
 		LocalDateTime d =  (LocalDateTime)entityManager.createQuery("select date from Suica where idm = :idm and state = :state order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
 		return d.getMonthValue();
 	}
-	public LocalTime findMonthTime(String idm) {
+	public String findMonthTime(String idm) {
 		// TODO 自動生成されたメソッド・スタブ
-		 return (LocalTime) entityManager.createQuery("select monthTime from Suica where idm = :idm and state = :state order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
+		 return (String)entityManager.createQuery("select monthTime from Suica where idm = :idm and state = :state order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
 	}
 	public long findState(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm and state = :state").setParameter("idm", idm).setParameter("state", "退勤").getSingleResult();

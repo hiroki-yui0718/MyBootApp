@@ -29,7 +29,7 @@ public class Suica {
 	@Column
 	private LocalTime dayTime;
 	@Column
-	private LocalTime monthTime;
+	private String monthTime;
 
 	@ManyToOne
 	private Account account;
@@ -69,10 +69,10 @@ public class Suica {
 	public LocalTime getDayTime() {
 		return dayTime;
 	}
-	public void setMonthTime(LocalTime monthTime) {
+	public void setMonthTime(String monthTime) {
 		this.monthTime = monthTime;
 	}
-	public LocalTime getMonthTime() {
+	public String getMonthTime() {
 		return monthTime;
 	}
 	public Account getAccount(){

@@ -27,11 +27,28 @@ public class ServerController {
 	public void init() {
 
 	}
-	public LocalTime date(int sec) {
+	public LocalTime dayTime(int sec) {
 		int hour = sec / 3600;
 		int min = (sec%3600) / 60;
 		sec = sec % 60;
 		return LocalTime.of(hour,min,sec);
+	}
+	public String monthTime(int sec) {
+		int hour = sec / 3600;
+		int min = (sec%3600) / 60;
+		sec = sec % 60;
+		String str = hour + ":" + min +":" +sec; 
+		return str;
+	}
+	public String sumTime(String monthTime,int sec) {
+		String[] time = new String[3];
+		time = monthTime.split(":", 0);
+		int sum = Integer.parseInt(time[0]) * 3600;
+		sum += Integer.parseInt(time[1]) * 60;
+		sum += Integer.parseInt(time[2]);
+		sum += sec;
+		String str = monthTime(sum);
+		return str;
 	}
 	@RequestMapping("/server")
 	public ModelAndView server(ModelAndView mav) {
@@ -47,8 +64,8 @@ public class ServerController {
 			suica.setIdm(line);
 			suica.setDate(t1);
 			suica.setState("登録");
-			suica.setDayTime(date(0));
-			suica.setMonthTime(date(0));
+			suica.setDayTime(dayTime(0));
+			suica.setMonthTime(monthTime(0));
 		}else {
 			Suica state = service.find(line);
 			LocalDateTime t2 = state.getDate();
@@ -60,28 +77,27 @@ public class ServerController {
 				suica.setState("退勤");
 				c.runSample("退勤");
 				mav.addObject("msg",line + "さんの退勤を受け付けました");
-				//初退勤じゃない時
+				//ｘ初退勤じゃない時
 				if(service.findState(line) != 0) {
 					int month = service.findMonth(line);
-					if(t1.getMonthValue() != month) { //月初め
-						suica.setDayTime(date(sec));
-						suica.setMonthTime(date(sec));
-					}else{ //日初め or 同日
-						LocalTime m = service.findMonthTime(line);
-						int mSumTime = m.toSecondOfDay() + sec;
-						suica.setDayTime(date(sec));
-						suica.setMonthTime(date(mSumTime));
+					if(t1.getMonthValue() != month) { //ｘ月初め
+						suica.setDayTime(dayTime(sec));
+						suica.setMonthTime(monthTime(sec));
+					}else{ //ｘ日初め or 同日
+						String m = service.findMonthTime(line);
+						suica.setDayTime(dayTime(sec));
+						suica.setMonthTime(sumTime(m,sec));
 					}
 				}else {
-					suica.setDayTime(date(sec));
-					suica.setMonthTime(date(sec));
+					suica.setDayTime(dayTime(sec));
+					suica.setMonthTime(monthTime(sec));
 				}
 
 			}else {
 				suica.setIdm(line);
 				suica.setState("出勤");
-				suica.setDayTime(date(0));
-				suica.setMonthTime(date(0));
+				suica.setDayTime(dayTime(0));
+				suica.setMonthTime(monthTime(0));
 				c.runSample("出勤");
 				mav.addObject("msg",line + "さんの出勤を受け付けました");
 			}
@@ -95,7 +111,7 @@ public class ServerController {
 		repository.saveAndFlush(suica);
 		List<Suica> list = service.getAll();
 		mav.addObject("datalist",list);
-		mav.addObject("if",date(0));
+		mav.addObject("if",dayTime(0));
 		return mav;
 	}
 
