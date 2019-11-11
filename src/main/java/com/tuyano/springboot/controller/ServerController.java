@@ -56,6 +56,7 @@ public class ServerController {
 		mav.setViewName("server");
 		ServerSide s1 = new ServerSide();
 		String line = s1.runSample();
+		String name =service.findName(line);
 		Suica suica = new Suica();
 		LocalDateTime t1 = LocalDateTime.now();
 		long num = service.findIdm(line);
@@ -66,6 +67,7 @@ public class ServerController {
 			suica.setState("登録");
 			suica.setDayTime(dayTime(0));
 			suica.setMonthTime(monthTime(0));
+			mav.addObject("msg",name + "さんの登録を受け付けました");
 		}else {
 			Suica state = service.find(line);
 			LocalDateTime t2 = state.getDate();
@@ -76,7 +78,7 @@ public class ServerController {
 				suica.setIdm(line);
 				suica.setState("退勤");
 				c.runSample("退勤");
-				mav.addObject("msg",line + "さんの退勤を受け付けました");
+				mav.addObject("msg",name + "さんの退勤を受け付けました");
 				//ｘ初退勤じゃない時
 				if(service.findState(line) != 0) {
 					int month = service.findMonth(line);
@@ -99,7 +101,7 @@ public class ServerController {
 				suica.setDayTime(dayTime(0));
 				suica.setMonthTime(monthTime(0));
 				c.runSample("出勤");
-				mav.addObject("msg",line + "さんの出勤を受け付けました");
+				mav.addObject("msg",name + "さんの出勤を受け付けました");
 			}
 			suica.setDate(t1);
 

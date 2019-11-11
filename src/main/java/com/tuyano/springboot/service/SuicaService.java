@@ -44,5 +44,8 @@ public class SuicaService {
 		// TODO 自動生成されたメソッド・スタブ
 		return (Account)entityManager.createQuery("from Account where idm = :idm").setParameter("idm", idm).getSingleResult();
 	}
+	public String findName(String idm) {
+		return (String)entityManager.createQuery("select username from Account where idm = :idm").setParameter("idm", idm).getSingleResult();
+	}
 
 }
