@@ -30,6 +30,14 @@ public class CalendarController {
 	private int year;
 	private int month;
 
+	public String date(LocalDateTime t) {
+		int hour = t.getHour();
+		int min = t.getMinute();
+		int sec = t.getSecond();
+		String str = hour + ":" + min +":" + sec;
+		return str;
+	}
+	
 	public void setCal() {
 		Calendar cal = Calendar.getInstance();
 		this.year = cal.get(Calendar.YEAR);
@@ -82,6 +90,7 @@ public class CalendarController {
 		setCal();
 
 		List<LocalTime> list = new ArrayList<>();
+		List<String> list2 = new ArrayList<>();
 		for(int i = 1;i <= lastDate;i++) {
 			try{
 				LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
@@ -90,12 +99,20 @@ public class CalendarController {
 			}catch(NoResultException e) {
 				list.add(null);
 			}
+			try{
+				LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
+				LocalDateTime t2= LocalDateTime.of(year,month,i,23,59,59);
+				list2.add(date(service.findStart(name,t1,t2)));
+			}catch(NoResultException e) {
+				list2.add(null);
+			}
 
 		}
 		mav.setViewName("calendar");
 		mav.addObject("day",day());
 		mav.addObject("week",week());
 		mav.addObject("sumTime",list);
+		mav.addObject("startTime",list2);
 		return mav;
 	}
 }

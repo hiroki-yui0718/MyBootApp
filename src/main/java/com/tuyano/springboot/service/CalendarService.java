@@ -19,12 +19,14 @@ public class CalendarService {
 	public LocalTime findSumTime(String name,LocalDateTime str1,LocalDateTime str2) {
 		// TODO 自動生成されたメソッド・スタブ
 		String idm = (String) entityManager.createQuery("select idm from Account where username = :name").setParameter("name", name).getSingleResult();
-		LocalTime t =(LocalTime)entityManager.createQuery("select dayTime from Suica where idm = :idm and state = :state and date between :str1 and :str2 order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setParameter("str1", str1).setParameter("str2", str2).setMaxResults(1).getSingleResult(); 
-		if(t.toString().isEmpty()) {
-			return LocalTime.of(0,0,0);
-		}else {
-			return t;
-		}
+		return (LocalTime)entityManager.createQuery("select dayTime from Suica where idm = :idm and state = :state and date between :str1 and :str2 order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setParameter("str1", str1).setParameter("str2", str2).setMaxResults(1).getSingleResult(); 
+
+	}
+	public LocalDateTime findStart(String name,LocalDateTime str1,LocalDateTime str2) {
+		// TODO 自動生成されたメソッド・スタブ
+		String idm = (String) entityManager.createQuery("select idm from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (LocalDateTime)entityManager.createQuery("select date from Suica where idm = :idm and state = :state and date between :str1 and :str2 order by id desc").setParameter("idm", idm).setParameter("state", "出勤").setParameter("str1", str1).setParameter("str2", str2).setMaxResults(1).getSingleResult(); 
+
 	}
 	
 }
