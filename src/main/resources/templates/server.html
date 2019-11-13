@@ -12,7 +12,7 @@
 <div th:include="header :: data"></div>
 <div class="container">
 <p th:text="${msg}"></p>
-<table class="table tbale-hover">
+<table class="table table-hover table-striped">
 <thead class="thead-dark">
 <tr><th>No.</th><th>名前</th><th>IDm</th><th>日時</th><th>状態</th><th>勤務時間</th><th>総勤務時間</th></tr>
 </thead>
@@ -23,8 +23,8 @@
  <td>************</td>
  <td th:text="${obj.date}"></td>
   <td th:text="${obj.state}"></td>
-  <td th:text="${obj.dayTime eq if}? '----' : ${obj.dayTime}"></td>
-  <td th:text="${obj.monthTime eq if}? '----' : ${obj.monthTime}"></td>
+  <td th:text="${obj.dayTime eq if1}? '----' : ${obj.dayTime}"></td>
+  <td th:text="${obj.monthTime eq if2}? '----' : ${obj.monthTime}"></td>
  </tbody>
  </table>
 </div>

@@ -113,7 +113,8 @@ public class ServerController {
 		repository.saveAndFlush(suica);
 		List<Suica> list = service.getAll();
 		mav.addObject("datalist",list);
-		mav.addObject("if",dayTime(0));
+		mav.addObject("if1",dayTime(0));
+		mav.addObject("if2","0:00:00");
 		return mav;
 	}
 
