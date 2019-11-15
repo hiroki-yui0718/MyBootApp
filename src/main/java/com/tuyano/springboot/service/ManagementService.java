@@ -5,8 +5,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import com.tuyano.springboot.model.Management;
@@ -43,6 +45,13 @@ public class ManagementService {
 	}
 	public String getIdm(String name) {
 		return (String)entityManager.createQuery("select idm from Account where username = :name").setParameter("name", name).getSingleResult();
+	}
+	@Transactional
+	@Modifying
+	public int delAll() {
+		// TODO 自動生成されたメソッド・スタブ
+		return (int)entityManager.createQuery("delete from Management").executeUpdate();
+		
 	}
 	
 }

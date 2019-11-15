@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.TransactionRequiredException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -71,11 +72,12 @@ public class ManagementController {
 	}
 
 	@RequestMapping("/calendar")
-	public ModelAndView index(ModelAndView mav,Authentication authentication) {
+	public ModelAndView index(ModelAndView mav,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
 		setCal();
 //		xここに削除文
+			System.out.println(service.delAll());
 		int j = startDay;
 		for(int i = 1;i <= lastDate;i++) {
 			Management manage = new Management();

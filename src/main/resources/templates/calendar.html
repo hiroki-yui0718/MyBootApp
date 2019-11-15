@@ -11,7 +11,10 @@
  <body>
 <div th:include="header :: data"></div>
 <div class="container">
- <p th:text="#{content.message}"></p>
+ <form>
+ <div class="row">
+ <input type="submit" value="登録" class="offset-md-11 pull-right btn btn-primary mb-3"> 
+ </div>
  <table class="table table-hover">
  <thead class="thead-dark">
 <tr><th>日付</th><th>曜日</th><th>出社予定時間</th><th>退社予定時間</th><th>出社時間</th><th>退社時間</th><th>残業時間</th><th>勤務時間</th></tr>
@@ -20,8 +23,8 @@
 <tr th:each="obj:${datalist}">
 <td th:text="${obj.day}"></td>
 <td th:text="${obj.week}"></td>
-<td th:text="${obj.scheStartTime}"></td>
-<td th:text="${obj.scheEndTime}"></td>
+<script th:inline="javascript"> document.write("<td class=\"text-center\"><input type=\"text\" name=\"scheStartTime\" size=\"4\" maxlength=\"4\"></td>");</script>
+<script th:inline="javascript"> document.write("<td class=\"text-center\"><input type=\"text\" name=\"scheEndTime\" size=\"4\" maxlength=\"4\"></td>");</script>
 <td th:text="${obj.startTime}"></td>
 <td th:text="${obj.endTime}"></td>
 <td th:text="${obj.time}"></td>
@@ -29,6 +32,7 @@
 </tr>
 </tbody>
 </table>
+</form>
 </div>
 </body>
 </html>

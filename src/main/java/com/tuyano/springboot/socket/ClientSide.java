@@ -14,7 +14,8 @@ public class ClientSide {
 
 		try{
 			//IPアドレスとポート番号を指定してクライアント側のソケットを作成
-			cSocket = new Socket("192.168.3.10", 8765);
+//			cSocket = new Socket("192.168.3.10", 8765);
+			cSocket = new Socket("192.168.0.19", 8765);
 
 			
 			//クライアント側からサーバへの送信用
