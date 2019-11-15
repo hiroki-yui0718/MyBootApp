@@ -26,6 +26,7 @@ public class Suica {
 	private LocalDateTime date;
 	@Column
 	private String state;
+
 	@Column
 	private LocalTime dayTime;
 	@Column
@@ -63,6 +64,7 @@ public class Suica {
 	public String getState() {
 		return state;
 	}
+
 	public void setDayTime(LocalTime dayTime) {
 		this.dayTime = dayTime;
 	}

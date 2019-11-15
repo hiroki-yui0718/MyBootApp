@@ -238,7 +238,7 @@ public ModelAndView search(ModelAndView mav,HttpServletRequest request) {
 	}
 	return mav;
 }
-@RequestMapping(value="/delete/{id}",method=RequestMethod.GET)
+@RequestMapping(value="/delete/{id}",method=RequestMethod.POST)
 public ModelAndView delete(@PathVariable int id,ModelAndView mav) {
 	mav.setViewName("delete");
 	mav.addObject("title","delete mydata.");
@@ -246,7 +246,7 @@ public ModelAndView delete(@PathVariable int id,ModelAndView mav) {
 	mav.addObject("formModel",data.get());
 	return mav;
 }
-@RequestMapping(value="/delete",method=RequestMethod.POST)
+@RequestMapping(value="/delete",method=RequestMethod.GET)
 @Transactional(readOnly=false) //DBいじる時は書く
 public ModelAndView remove(@RequestParam long id,ModelAndView mav) {
 	repository.deleteById(id);

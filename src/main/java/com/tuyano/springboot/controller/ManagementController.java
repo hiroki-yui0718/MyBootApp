@@ -1,5 +1,6 @@
 package com.tuyano.springboot.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -8,16 +9,21 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TransactionRequiredException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tuyano.springboot.model.Account;
 import com.tuyano.springboot.model.Management;
+import com.tuyano.springboot.model.Manager;
 import com.tuyano.springboot.repositories.ManagementRepository;
+import com.tuyano.springboot.repositories.ManagerRepository;
 import com.tuyano.springboot.service.ManagementService;
 
 @Controller
@@ -28,6 +34,8 @@ public class ManagementController {
 
 	@Autowired
 	ManagementRepository repository;
+	@Autowired
+	ManagerRepository repository2;
 
 	String[] week = {" ","日","月","火","水","木","金","土"};
 	private int startDay;
@@ -70,19 +78,38 @@ public class ManagementController {
 		this.lastDate = cal.get(Calendar.DATE);
 
 	}
+	@RequestMapping(value="/calendar",method=RequestMethod.POST)
+	public ModelAndView index(ModelAndView mav,HttpServletRequest request,Authentication authentication){
+		User userDetail = (User)authentication.getPrincipal();
+		String name = userDetail.getUsername();
 
-	@RequestMapping("/calendar")
-	public ModelAndView index(ModelAndView mav,Authentication authentication){
+		setCal();
+		for(int i = 1;i <= lastDate;i++) {
+			Manager mana = new Manager();
+			LocalDate t = LocalDate.of(year,month,i);
+			mana.setIdm(service.getIdm(name));
+			mana.setDate(t);
+			mana.setScheStratTime(request.getParameter("scheStartTime" + i));
+			mana.setScheEndTime(request.getParameter("scheEndTime" + i));
+			repository2.saveAndFlush(mana);
+		}
+		mav.setViewName("calendar");
+		mav = new ModelAndView("redirect:/calendar");
+		return mav;
+	}
+	@RequestMapping(value="/calendar",method=RequestMethod.GET)
+	public ModelAndView send(ModelAndView mav,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
 		setCal();
-//		xここに削除文
-			System.out.println(service.delAll());
+		//		xここに削除文
+		System.out.println(service.delAll());
 		int j = startDay;
 		for(int i = 1;i <= lastDate;i++) {
 			Management manage = new Management();
 			LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
 			LocalDateTime t2= LocalDateTime.of(year,month,i,23,59,59);
+			LocalDate t3 = LocalDate.of(year,month,i);
 			String str = month + "月"+ i +"日";
 			manage.setIdm(service.getIdm(name));
 			manage.setYear(year);
@@ -91,9 +118,16 @@ public class ManagementController {
 			manage.setWeek(week[j]);
 			j++;
 			if(j == 8)j = 1;
-			manage.setScheStartTime(null);
-			manage.setScheEndTime(null);
-
+			try{
+				manage.setScheStartTime(service.findScheStartTime(name,t3,"scheStartTime" + i));
+			}catch(NoResultException e) {
+				manage.setScheStartTime(null);
+			}
+			try{
+				manage.setScheEndTime(service.findScheEndTime(name,t3,"scheEndTime" + i));
+			}catch(NoResultException e) {
+				manage.setScheEndTime(null);
+			}
 			try{
 				manage.setStartTime(date(service.findStart(name,t1,t2)));
 			}catch(NoResultException e) {

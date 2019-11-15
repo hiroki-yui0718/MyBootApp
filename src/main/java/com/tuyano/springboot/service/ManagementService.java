@@ -1,5 +1,6 @@
 package com.tuyano.springboot.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -52,6 +53,17 @@ public class ManagementService {
 		// TODO 自動生成されたメソッド・スタブ
 		return (int)entityManager.createQuery("delete from Management").executeUpdate();
 		
+	}
+	public String findScheStartTime(String name, LocalDate t, String string) {
+		// TODO 自動生成されたメソッド・スタブ
+		String idm = getIdm(name);
+		return (String)entityManager.createQuery("select scheStartTime from Manager where idm = :idm and date = :str order by id").setParameter("idm", idm).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+	}
+	public String findScheEndTime(String name, LocalDate t, String string) {
+		// TODO 自動生成されたメソッド・スタブ
+		String idm = getIdm(name);
+		return (String)entityManager.createQuery("select scheEndTime from Manager where idm = :idm and date = :str order by id").setParameter("idm", idm).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+
 	}
 	
 }
