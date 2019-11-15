@@ -17,8 +17,8 @@
 <tr><th>No.</th><th>名前</th><th>IDm</th><th>日時</th><th>状態</th><th>勤務時間</th><th>総勤務時間</th></tr>
 </thead>
 <tbody>
- <tr th:each="obj:${datalist}">
- <td th:text="${obj.id}"></td>
+ <tr th:each="obj,obj2:${datalist}">
+ <td th:text="${obj2.count}"></td>
 <td th:text="${obj.account.username}"></td>
  <td>************</td>
  <td th:text="${obj.date}"></td>

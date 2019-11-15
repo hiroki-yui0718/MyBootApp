@@ -1,6 +1,5 @@
 package com.tuyano.springboot.controller;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -16,13 +15,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tuyano.springboot.service.CalendarService;
+import com.tuyano.springboot.model.Management;
+import com.tuyano.springboot.repositories.ManagementRepository;
+import com.tuyano.springboot.service.ManagementService;
 
 @Controller
-public class CalendarController {
+public class ManagementController {
 
 	@Autowired
-	CalendarService service;
+	ManagementService service;
+
+	@Autowired
+	ManagementRepository repository;
 
 	String[] week = {" ","日","月","火","水","木","金","土"};
 	private int startDay;
@@ -37,7 +41,20 @@ public class CalendarController {
 		String str = hour + ":" + min +":" + sec;
 		return str;
 	}
-	
+	public String monthTime(int sec) {
+		int hour = sec / 3600;
+		int min = (sec%3600) / 60;
+		sec = sec % 60;
+		String str = hour + ":" + min +":" +sec; 
+		return str;
+	}
+	public int sumTime(LocalTime t) {
+		int sec = t.getHour()* 3600;
+		sec += t.getMinute() * 60;
+		sec += t.getSecond();
+		return sec;
+	}
+
 	public void setCal() {
 		Calendar cal = Calendar.getInstance();
 		this.year = cal.get(Calendar.YEAR);
@@ -53,66 +70,53 @@ public class CalendarController {
 
 	}
 
-	public List<String> week(){
-		List<String> list = new ArrayList<>(); 
-		setCal();
-		int i = 1;
-		int j = startDay;
-
-		loop: while(true) {
-			while(j < week.length) {
-				list.add(week[j]);
-				i++;
-				j++;
-				if(j == 8)j = 1;
-				if(i > lastDate) {
-					break loop;
-
-				}
-
-			}
-		}
-		return list;
-	}
-	public List<String> day(){
-		List<String> list = new ArrayList<>();
-		for(int j = 1;j < lastDate + 1;j++) {
-			String str = month + "月"+ j +"日";
-			list.add(str);
-		}
-		return list;
-	}
-
 	@RequestMapping("/calendar")
 	public ModelAndView index(ModelAndView mav,Authentication authentication) {
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
 		setCal();
-
-		List<LocalTime> list = new ArrayList<>();
-		List<String> list2 = new ArrayList<>();
+//		xここに削除文
+		int j = startDay;
 		for(int i = 1;i <= lastDate;i++) {
-			try{
-				LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
-				LocalDateTime t2= LocalDateTime.of(year,month,i,23,59,59);
-				list.add(service.findSumTime(name,t1,t2));
-			}catch(NoResultException e) {
-				list.add(null);
-			}
-			try{
-				LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
-				LocalDateTime t2= LocalDateTime.of(year,month,i,23,59,59);
-				list2.add(date(service.findStart(name,t1,t2)));
-			}catch(NoResultException e) {
-				list2.add(null);
-			}
+			Management manage = new Management();
+			LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
+			LocalDateTime t2= LocalDateTime.of(year,month,i,23,59,59);
+			String str = month + "月"+ i +"日";
+			manage.setIdm(service.getIdm(name));
+			manage.setYear(year);
+			manage.setDay(str);
 
+			manage.setWeek(week[j]);
+			j++;
+			if(j == 8)j = 1;
+			manage.setScheStartTime(null);
+			manage.setScheEndTime(null);
+
+			try{
+				manage.setStartTime(date(service.findStart(name,t1,t2)));
+			}catch(NoResultException e) {
+				manage.setStartTime(null);
+			}
+			try{
+				manage.setEndTime(date(service.findEnd(name,t1,t2)));
+			}catch(NoResultException e) {
+				manage.setEndTime(null);
+			}
+			manage.setTime(null);
+			try{
+				List<LocalTime> m = service.findSumTime(name,t1,t2);
+				int sum = 0;
+				for(LocalTime t:m) {
+					sum += sumTime(t);
+				}
+				manage.setSumTime(monthTime(sum));
+			}catch(NoResultException e) {
+				manage.setSumTime(null);
+			}
+			repository.saveAndFlush(manage);
 		}
 		mav.setViewName("calendar");
-		mav.addObject("day",day());
-		mav.addObject("week",week());
-		mav.addObject("sumTime",list);
-		mav.addObject("startTime",list2);
+		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
 		return mav;
 	}
 }

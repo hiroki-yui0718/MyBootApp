@@ -12,21 +12,23 @@
 <div th:include="header :: data"></div>
 <div class="container">
  <p th:text="#{content.message}"></p>
- <table border="0" class="table">
+ <table class="table table-hover">
  <thead class="thead-dark">
-<tr><th>日付</th><th>曜日</th><th>出社予定時間</th><th>退社予定時間</th><th>出社時間</th><th>退社時間</th><th>残業時間</th><th>勤務時間</th></tr></thead>
-<tr>
-<TD><table class="table"><tr th:each="obj:${day}"><td th:text="${obj}"></td></tr></table></TD>
-<TD><table class="table"><tr th:each="obj2:${week}"><td th:text="${obj2}"></td></tr></table></TD>
-<TD><table class="table"><tr><td></td></tr></table></TD>
-<TD><table class="table"><tr><td></td></tr></table></TD>
-<TD><table class="table"><tr th:each="obj3:${startTime}"><td th:text="${obj3}"></td></tr></table></TD>
-<TD><table class="table"><tr><td></td></tr></table></TD>
-<TD><table class="table"><tr><td></td></tr></table></TD>
-<TD><table class="table"><tr th:each="obj4:${sumTime}"><td th:text="${obj4}"></td></tr></table></TD>
-
+<tr><th>日付</th><th>曜日</th><th>出社予定時間</th><th>退社予定時間</th><th>出社時間</th><th>退社時間</th><th>残業時間</th><th>勤務時間</th></tr>
+</thead>
+<tbody>
+<tr th:each="obj:${datalist}">
+<td th:text="${obj.day}"></td>
+<td th:text="${obj.week}"></td>
+<td th:text="${obj.scheStartTime}"></td>
+<td th:text="${obj.scheEndTime}"></td>
+<td th:text="${obj.startTime}"></td>
+<td th:text="${obj.endTime}"></td>
+<td th:text="${obj.time}"></td>
+<td th:text="${obj.sumTime}"></td>
 </tr>
-</TABLE>
+</tbody>
+</table>
 </div>
 </body>
 </html>
