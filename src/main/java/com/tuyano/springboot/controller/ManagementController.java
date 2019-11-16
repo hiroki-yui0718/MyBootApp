@@ -1,5 +1,6 @@
 package com.tuyano.springboot.controller;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -89,8 +90,10 @@ public class ManagementController {
 			LocalDate t = LocalDate.of(year,month,i);
 			mana.setIdm(service.getIdm(name));
 			mana.setDate(t);
-			mana.setScheStratTime(request.getParameter("scheStartTime" + i));
-			mana.setScheEndTime(request.getParameter("scheEndTime" + i));
+			String str1 = request.getParameter("scheStartTime" + i);
+			String str2 = request.getParameter("scheEndTime" + i);
+			mana.setScheStratTime(str1);
+			mana.setScheEndTime(str2);
 			repository2.saveAndFlush(mana);
 		}
 		mav.setViewName("calendar");
@@ -103,7 +106,7 @@ public class ManagementController {
 		String name = userDetail.getUsername();
 		setCal();
 		//		xここに削除文
-		System.out.println(service.delAll());
+		service.delAll();
 		int j = startDay;
 		for(int i = 1;i <= lastDate;i++) {
 			Management manage = new Management();
@@ -118,13 +121,18 @@ public class ManagementController {
 			manage.setWeek(week[j]);
 			j++;
 			if(j == 8)j = 1;
+			LocalDateTime t4 = null;
+			String str2 = null;
 			try{
-				manage.setScheStartTime(service.findScheStartTime(name,t3,"scheStartTime" + i));
+				String str1 = service.findScheStartTime(name,t3);
+				manage.setScheStartTime(str1);
+				
 			}catch(NoResultException e) {
 				manage.setScheStartTime(null);
 			}
 			try{
-				manage.setScheEndTime(service.findScheEndTime(name,t3,"scheEndTime" + i));
+				str2 = service.findScheEndTime(name,t3);
+				manage.setScheEndTime(str2);
 			}catch(NoResultException e) {
 				manage.setScheEndTime(null);
 			}
@@ -134,11 +142,17 @@ public class ManagementController {
 				manage.setStartTime(null);
 			}
 			try{
-				manage.setEndTime(date(service.findEnd(name,t1,t2)));
+				t4 = service.findEnd(name,t1,t2);
+				manage.setEndTime(date(t4));
 			}catch(NoResultException e) {
 				manage.setEndTime(null);
 			}
-			manage.setTime(null);
+			try{
+				String str3 = diff(t4,str2);
+				manage.setTime(str3);
+			}catch(NoResultException e) {
+				manage.setTime(null);
+			}
 			try{
 				List<LocalTime> m = service.findSumTime(name,t1,t2);
 				int sum = 0;
@@ -151,8 +165,27 @@ public class ManagementController {
 			}
 			repository.saveAndFlush(manage);
 		}
+		mav.addObject("name",name +"さんの勤怠管理表です");
 		mav.setViewName("calendar");
 		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
 		return mav;
+	}
+	public String diff(LocalDateTime t4, String str2) {
+		// TODO 自動生成されたメソッド・スタブ
+		String str1;
+		try {
+		String[] str = str2.split(":",0);
+		LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
+		LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
+		Duration d = Duration.between(t2, t);
+		if(d.toSeconds() <0) {
+			str1 = "-" + monthTime((int)-d.toSeconds());
+		}else {
+			str1 = monthTime((int)d.toSeconds());
+		}
+		}catch(NullPointerException e) {
+			str1 = null;
+		}
+		return str1;
 	}
 }
