@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -65,10 +66,19 @@ public class ManagementController {
 		return sec;
 	}
 
-	public void setCal() {
+	public void setCal(int num) {
 		Calendar cal = Calendar.getInstance();
-		this.year = cal.get(Calendar.YEAR);
-		this.month  = cal.get(Calendar.MONTH) + 1;
+		this.month  = cal.get(Calendar.MONTH) + 1+ num;
+		if(month > 12) {
+			this.year = cal.get(Calendar.YEAR) + (num /12 + 1);
+			this.month %= 12;
+		}else if(month < 1){
+			this.year = cal.get(Calendar.YEAR) - (num / 12 -1);
+			this.month= num % 12 + 12;
+		}else {
+			this.year = cal.get(Calendar.YEAR);
+		}
+
 		cal.clear();
 		// 月の初めの曜日を求めます。
 		cal.set(year, month - 1, 1);// 引数: 1月: 0, 2月: 1, ...
@@ -79,12 +89,12 @@ public class ManagementController {
 		this.lastDate = cal.get(Calendar.DATE);
 
 	}
-	@RequestMapping(value="/calendar",method=RequestMethod.POST)
-	public ModelAndView index(ModelAndView mav,HttpServletRequest request,Authentication authentication){
+	@RequestMapping(value="/calendar/{date}",method=RequestMethod.POST)
+	public ModelAndView index(@PathVariable int date,ModelAndView mav,HttpServletRequest request,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
 
-		setCal();
+		setCal(date);
 		for(int i = 1;i <= lastDate;i++) {
 			Manager mana = new Manager();
 			LocalDate t = LocalDate.of(year,month,i);
@@ -100,11 +110,12 @@ public class ManagementController {
 		mav = new ModelAndView("redirect:/calendar");
 		return mav;
 	}
-	@RequestMapping(value="/calendar",method=RequestMethod.GET)
-	public ModelAndView send(ModelAndView mav,Authentication authentication){
+	@RequestMapping(value="/calendar/{date}",method=RequestMethod.GET)
+	public ModelAndView send(@PathVariable int date,ModelAndView mav,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
-		setCal();
+		
+		setCal(date);
 		//		xここに削除文
 		service.delAll();
 		int j = startDay;
@@ -165,7 +176,10 @@ public class ManagementController {
 			}
 			repository.saveAndFlush(manage);
 		}
-		mav.addObject("name",name +"さんの勤怠管理表です");
+		System.out.println(year+ "年"+  month+"月");
+		mav.addObject("next",date+1);
+		mav.addObject("back",date-1);
+		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
 		mav.setViewName("calendar");
 		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
 		return mav;

@@ -1,19 +1,21 @@
-<div th:fragment="data">
+<div onbeforeunload="force_logout();" th:fragment="data">
 <header class="navbar navbar-fixed-top bg-dark mb-4">
   <div class="container">
  <a href="/" th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</a>
  <ul class="navbar list-inline" style="height:1rem;">
            <li class="list-inline-item"><a href="/signup">従業員登録</a></li>
   <li class="list-inline-item"><a href="/server">出退勤</a></li>
-    <li class="list-inline-item"><a href="/line">クライアント実験</a></li>
-<!--  <li class="list-inline-item"><a href="/user/data">追加</a></li>
+<!--     <li class="list-inline-item"><a href="/line">クライアント実験</a></li>
+ <li class="list-inline-item"><a href="/user/data">追加</a></li>
  <li class="list-inline-item"><a href="/edit/1">編集</a></li>
  <li class="list-inline-item"><a href="/find">検索</a></li>
   <li class="list-inline-item"><a href="/delete/1">削除</a></li>
     <li class="list-inline-item"><a href="/msg">メッセージ</a></li> -->
-        <li class="list-inline-item"><a href="/calendar">勤怠確認</a></li>
+        <li class="list-inline-item"><a href="/calendar/0">勤怠確認</a></li>
         <li class="list-inline-item"><a href="/login">ログイン</a></li>
-
+        <form th:action="@{/logout}" method="post" name="Form"><li class="list-inline-item"><a href="javascript:document.Form.submit()">ログアウト</a></form>
+<script type="text/javascript">function force_logout() {document.Form.submit();}</script>
  </ul> </div>
+
  </header>
  </div>

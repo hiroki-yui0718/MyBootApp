@@ -16,6 +16,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		//x認証設定を書く方
 		http.formLogin().loginPage("/login").successForwardUrl("/").permitAll();
 		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/").permitAll().antMatchers("/signup").permitAll().anyRequest().authenticated();
+		http.logout().logoutUrl("/logout").permitAll();
+		http.logout().logoutSuccessUrl("/").permitAll();
 	}
 	@Bean
 	public PasswordEncoder passwordEncoder() {
