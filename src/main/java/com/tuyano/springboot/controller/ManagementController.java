@@ -69,15 +69,20 @@ public class ManagementController {
 	public void setCal(int num) {
 		Calendar cal = Calendar.getInstance();
 		this.month  = cal.get(Calendar.MONTH) + 1+ num;
-		if(month > 12) {
-			this.year = cal.get(Calendar.YEAR) + (num /12 + 1);
-			this.month %= 12;
-		}else if(month < 1){
-			this.year = cal.get(Calendar.YEAR) - (num / 12 -1);
-			this.month= num % 12 + 12;
-		}else {
-			this.year = cal.get(Calendar.YEAR);
+
+		int i = 0;
+		while(true) {
+		if(month > 12) { //NEXT
+			this.month -= 12;
+			i++;
+		}if(month < 1){ //BACK
+			this.month += 12;
+			i--;
+		}else if(0 < month && 13 > month){
+			break;
 		}
+		}
+		this.year = cal.get(Calendar.YEAR) + i;
 
 		cal.clear();
 		// 月の初めの曜日を求めます。
@@ -89,12 +94,12 @@ public class ManagementController {
 		this.lastDate = cal.get(Calendar.DATE);
 
 	}
-	@RequestMapping(value="/calendar/{date}",method=RequestMethod.POST)
+	@RequestMapping(value="/calendar",method=RequestMethod.POST)
 	public ModelAndView index(@PathVariable int date,ModelAndView mav,HttpServletRequest request,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
-
-		setCal(date);
+		int num = Integer.parseInt(request.getParameter("date"));
+		setCal(num);
 		for(int i = 1;i <= lastDate;i++) {
 			Manager mana = new Manager();
 			LocalDate t = LocalDate.of(year,month,i);
@@ -106,15 +111,14 @@ public class ManagementController {
 			mana.setScheEndTime(str2);
 			repository2.saveAndFlush(mana);
 		}
-		mav.setViewName("calendar");
-		mav = new ModelAndView("redirect:/calendar");
+		mav = new ModelAndView("redirect:/calendar/" + num);
 		return mav;
 	}
 	@RequestMapping(value="/calendar/{date}",method=RequestMethod.GET)
 	public ModelAndView send(@PathVariable int date,ModelAndView mav,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
-		
+		mav.addObject("date",date);
 		setCal(date);
 		//		xここに削除文
 		service.delAll();
@@ -176,7 +180,6 @@ public class ManagementController {
 			}
 			repository.saveAndFlush(manage);
 		}
-		System.out.println(year+ "年"+  month+"月");
 		mav.addObject("next",date+1);
 		mav.addObject("back",date-1);
 		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
