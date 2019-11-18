@@ -7,21 +7,88 @@
       th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" />
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}"></script>
+        <script src="https://kit.fontawesome.com/674e3e2851.js" crossorigin="anonymous"></script>
  </head>
  <body>
 <div th:include="header :: data"></div>
 <div class="container">
- <p th:text="#{content.message}"></p>
-<p th:text="${new java.util.Date().toString()}"></p>
-<p th:utext="${msg}"></p>
-<table th:inline="text" class="mt-3 table table-hover">
-<thead class="thead-dark">
-<tr><th>ID</th><th>NAME</th><th>EMAIL</th></tr>
-</thead>
-<tbody th:each="obj:${data}">
-<tr><td>[[${obj.id}]]</td><td>[[${obj.name}]]</td><td>[[${obj.value}]]</td></tr>
-</tbody>
-</table>
+<div class="row">
+<div class="col-md-12 mb-3"><p style="font-size:20px;">ホーム</p></div>
+</div>
+<div class="row">
+<div class="col-md-4 border-right"><p style="font-size:20px;">現在時刻</p></div>
+<div class="col-md-4"><p style="font-size:20px;">打刻</p></div>
+</div>
+<div class="row">
+<div class="col-md-4 border-right">
+<p style="font-size:30px;" class="text-center" id="RealtimeClockArea"></p>
+<p class="display-2 text-center" id="RealtimeClockArea2"></p>
+</div>
+<div class="col-md-2">
+<a href="/server" style="text-decoration:none;"><div class="card"><i class="card-img far fa-clock" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">出退勤</p></div></a>
+</div>
+<div class="col-md-2">
+<a href="/signup" style="text-decoration:none;"><div class="card"><i class="far fa-user-circle" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">従業員登録</p></div></a>
+</div>
+<div class="col-md-2">
+<a href="/calendar/0" style="text-decoration:none;"><div class="card"><i class="fas fa-tasks" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">勤怠管理</p></div></a>
+</div>
+<div class="col-md-2">
+<form th:action="@{/logout}" method="post" name="Form"><a href="javascript:document.Form.submit()" style="text-decoration:none;"><div class="card"><i class="fas fa-sign-in-alt" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">ログアウト</p></div></a></form>
+</div>
+</div>
+<div class="row mt-5">
+<div class="col-md-6 border-right">
+<p style="text-align:center;　background-color:#eaeeef;">ログイン履歴</p>
+<div class="list-group list-group-flush">
+<li class="list-group-item" style="text-align:center;" th:each="obj,obj2:${datalist}"><p th:text="|${obj2.count}, ${obj.account.username} ${obj.date} --${obj.state}--|"></li>
+</div>
+</div>
+<div class="col-md-6">
+<p style="text-align:center;">エラー履歴</p>
+<div class="list-group list-group-flush">
+<li class="list-group-item">XXXXXX</li>
+<li class="list-group-item">XXXXXX</li>
+<li class="list-group-item">XXXXXX</li>
+<li class="list-group-item">XXXXXX</li>
+<li class="list-group-item">XXXXXX</li>
+<li class="list-group-item">XXXXXX</li>
+<li class="list-group-item">XXXXXX</li>
+</div>
+</div>
+</div>
+<script>
+function set2fig(num) {
+   // 桁数が1桁だったら先頭に0を加えて2桁に調整する
+   var ret;
+   if( num < 10 ) { ret = "0" + num; }
+   else { ret = num; }
+   return ret;
+}
+function showClock2() {
+   var nowTime = new Date();
+   var nowHour = set2fig( nowTime.getHours() );
+   var nowMin  = set2fig( nowTime.getMinutes() );
+   var nowSec  = set2fig( nowTime.getSeconds() );
+   var msg = nowHour + ":" + nowMin + ":" + nowSec;
+   document.getElementById("RealtimeClockArea2").innerHTML = msg;
+}
+function getNow() {
+	var now = new Date();
+	var year = now.getFullYear();
+	var mon = now.getMonth()+1; //１を足すこと
+	var day = now.getDate();
+	var hour = now.getHours();
+	var min = now.getMinutes();
+	var sec = now.getSeconds();
+
+	//出力用
+	var s = year + "年" + mon + "月" + day + "日"; 
+	document.getElementById("RealtimeClockArea").innerHTML = s;
+}
+setInterval('showClock2()',1000);
+setInterval('getNow()',1000);
+</script>
 </div>
 </body>
 </html>

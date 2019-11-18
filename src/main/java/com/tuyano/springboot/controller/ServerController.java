@@ -115,6 +115,7 @@ public class ServerController {
 		mav.addObject("datalist",list);
 		mav.addObject("if1",dayTime(0));
 		mav.addObject("if2","0:00:00");
+		mav = new ModelAndView("redirect:/");
 		return mav;
 	}
 

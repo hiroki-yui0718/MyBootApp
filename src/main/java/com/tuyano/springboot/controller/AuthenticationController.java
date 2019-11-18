@@ -3,6 +3,7 @@ package com.tuyano.springboot.controller;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +30,10 @@ public class AuthenticationController {
 	}
 	
 	@RequestMapping(value="/login")
-	public String viewLoginForm() {
-		return "loginForm";
+	public ModelAndView viewLoginForm(ModelAndView mav,HttpSession session) {
+		mav.addObject("session",null);
+		mav.setViewName("loginForm");
+		return mav;
 	}
 	@RequestMapping(value="/signup",method=RequestMethod.GET)
 	public ModelAndView signup(ModelAndView mav) {

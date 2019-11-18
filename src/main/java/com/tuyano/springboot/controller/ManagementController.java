@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.TransactionRequiredException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -95,7 +96,7 @@ public class ManagementController {
 
 	}
 	@RequestMapping(value="/calendar",method=RequestMethod.POST)
-	public ModelAndView index(@PathVariable int date,ModelAndView mav,HttpServletRequest request,Authentication authentication){
+	public ModelAndView index(ModelAndView mav,HttpServletRequest request,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
 		int num = Integer.parseInt(request.getParameter("date"));
@@ -111,11 +112,12 @@ public class ManagementController {
 			mana.setScheEndTime(str2);
 			repository2.saveAndFlush(mana);
 		}
+		mav.setViewName("/calendar");
 		mav = new ModelAndView("redirect:/calendar/" + num);
 		return mav;
 	}
 	@RequestMapping(value="/calendar/{date}",method=RequestMethod.GET)
-	public ModelAndView send(@PathVariable int date,ModelAndView mav,Authentication authentication){
+	public ModelAndView send(@PathVariable int date,HttpSession session,ModelAndView mav,Authentication authentication){
 		User userDetail = (User)authentication.getPrincipal();
 		String name = userDetail.getUsername();
 		mav.addObject("date",date);

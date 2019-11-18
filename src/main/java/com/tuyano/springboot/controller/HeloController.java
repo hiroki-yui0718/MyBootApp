@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tuyano.springboot.MyDataDaoImpl;
 import com.tuyano.springboot.model.MyData;
+import com.tuyano.springboot.model.Suica;
 import com.tuyano.springboot.repositories.MyDataRepository;
 import com.tuyano.springboot.service.MyDataService;
+import com.tuyano.springboot.service.SuicaService;
 
 @Controller
 public class HeloController {
@@ -33,6 +36,8 @@ public class HeloController {
 	@Autowired
 	MyDataRepository repository;
 
+	@Autowired
+	SuicaService service2;
 	@PersistenceContext
 	EntityManager entityManager; //
 
@@ -107,6 +112,8 @@ public ModelAndView index(ModelAndView mav) {
 	data.add(new DataObject (0,"taro","taro@yamada"));
 	data.add(new DataObject (1,"hanako","hanako@flower"));
 	data.add(new DataObject(2,"sachiko","sachiko@happy"));
+	List<Suica> list = service2.getAll();
+	mav.addObject("datalist",list);
 	mav.addObject("data",data);
 	return mav;
 }
