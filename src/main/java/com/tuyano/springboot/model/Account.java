@@ -30,6 +30,8 @@ public class Account {
 	private String username;
 	@Column
 	private String password;
+	@Column
+	private boolean role;
 	public void setIdm(String idm) {
 		this.idm = idm;
 	}
@@ -48,5 +50,12 @@ public class Account {
 	public String getPassword() {
 		return password;
 	}
+	public void setRole(boolean role) {
+		this.role = role;
+	}
+	public boolean getRole() {
+		return role;
+	}
+	
 	
 }

@@ -51,12 +51,19 @@ public class AuthenticationController {
 		String username = request.getParameter("username");
 		String str1 = request.getParameter("password");
 		String str2 = request.getParameter("password-con");
+		String str3 = request.getParameter("role");
 		if(str1.equals(str2)) {
 			account.setIdm(idm);
 			account.setUsername(username);
 			account.setPassword(passwordEncoder.encode(str1));
+			if(str3 != null) {
+				account.setRole(Boolean.valueOf(str3));
+			}else {
+				account.setRole(false);
+			}
 			repository.saveAndFlush(account);
 			mav = new ModelAndView("redirect:/");
+			
 		}else {
 			mav = new ModelAndView("redirect:/signup");
 		}

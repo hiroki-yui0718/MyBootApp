@@ -18,6 +18,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/signup").permitAll().anyRequest().authenticated();
 		http.logout().logoutUrl("/logout").permitAll();
 		http.logout().logoutSuccessUrl("/").permitAll();
+		http.authorizeRequests().antMatchers("/").hasRole("ADMIN");
+		http.authorizeRequests().antMatchers("/").hasRole("USER");
 	}
 	@Bean
 	public PasswordEncoder passwordEncoder() {

@@ -1,11 +1,17 @@
 package com.tuyano.springboot.service;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +33,10 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 	}
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+	public enum ExampleRole {
+
+		ROLE_USER,ROLE_ADMIN
+	}
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// 本来ならDBアクセスしてパスワードを取得するところだが、サンプルなのでプログラム直書き
@@ -35,9 +44,17 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 		if(account == null) {
 			throw new UsernameNotFoundException(username);
 		}else {
-			
-
-		return new User(username, account.getPassword(), Collections.emptySet());
+		Set<ExampleRole> roles;
+		System.out.println(account.getRole());
+		if(account.getRole()) {
+			roles = EnumSet.of(ExampleRole.ROLE_ADMIN);
+		}else {
+			roles = EnumSet.of(ExampleRole.ROLE_USER);
+		}
+		Collection<? extends GrantedAuthority> authorities = roles.stream()
+					.map(ExampleRole::name).map(SimpleGrantedAuthority::new)
+					.collect(Collectors.toList());
+		return new User(username, account.getPassword(),authorities);
 		}
 	}
 }
