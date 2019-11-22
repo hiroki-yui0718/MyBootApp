@@ -35,7 +35,7 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 	private PasswordEncoder passwordEncoder;
 	public enum ExampleRole {
 
-		ROLE_USER,ROLE_ADMIN
+		ROLE_EMPLOYEE,ROLE_ADMIN,ROLE_MANAGER
 	}
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,12 +44,17 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 		if(account == null) {
 			throw new UsernameNotFoundException(username);
 		}else {
-		Set<ExampleRole> roles;
-		System.out.println(account.getRole());
-		if(account.getRole()) {
+		Set<ExampleRole> roles = null;
+		String role = account.getRole();
+		if(role.equals("ADMIN")) {
 			roles = EnumSet.of(ExampleRole.ROLE_ADMIN);
-		}else {
-			roles = EnumSet.of(ExampleRole.ROLE_USER);
+			System.out.println(1);
+		}else if(role.equals("MANAGER")){
+			roles = EnumSet.of(ExampleRole.ROLE_MANAGER);
+			System.out.println(2);
+		}else if(role.equals("EMPLOYEE")){
+			roles = EnumSet.of(ExampleRole.ROLE_EMPLOYEE);
+			System.out.println(3);
 		}
 		Collection<? extends GrantedAuthority> authorities = roles.stream()
 					.map(ExampleRole::name).map(SimpleGrantedAuthority::new)

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="account")
-public class Account {
+public class Account{
 	
 	@OneToMany(mappedBy = "account")
 	private List<Suica> suicas;
@@ -31,7 +31,7 @@ public class Account {
 	@Column
 	private String password;
 	@Column
-	private boolean role;
+	private String role;
 	public void setIdm(String idm) {
 		this.idm = idm;
 	}
@@ -50,10 +50,10 @@ public class Account {
 	public String getPassword() {
 		return password;
 	}
-	public void setRole(boolean role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
-	public boolean getRole() {
+	public String getRole() {
 		return role;
 	}
 	

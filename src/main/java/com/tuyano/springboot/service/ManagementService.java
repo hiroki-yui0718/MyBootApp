@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import com.tuyano.springboot.model.Account;
 import com.tuyano.springboot.model.Management;
 
 
@@ -63,6 +64,10 @@ public class ManagementService {
 		// TODO 自動生成されたメソッド・スタブ
 		String idm = getIdm(name);
 		return (String)entityManager.createQuery("select scheEndTime from Manager where idm = :idm and date = :str order by id desc").setParameter("idm", idm).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+	}
+	@SuppressWarnings("unchecked")
+	public List<Account> findDataAll(){
+		return (List<Account>)entityManager.createQuery("from Account").getResultList(); 
 	}
 	
 }
