@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +32,11 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 	public Account findOne(String username) {
 		return (Account)entityManager.createQuery("from Account where username = :username").setParameter("username", username).getSingleResult();
 		//x一意を指定しないといけない
+	}
+	@Transactional
+	@Modifying
+	public void RoleUpdate(long id, String role) {
+		entityManager.createQuery("UPDATE Account set role = :role where id = :id").setParameter("role",role).setParameter("id",id).executeUpdate();
 	}
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -61,5 +68,6 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 					.collect(Collectors.toList());
 		return new User(username, account.getPassword(),authorities);
 		}
+		
 	}
 }
