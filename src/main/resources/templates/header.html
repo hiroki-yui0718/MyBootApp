@@ -1,9 +1,9 @@
-<div onbeforeunload="force_logout();" th:fragment="data">
+<div th:fragment="data">
 <header class="navbar navbar-fixed-top bg-dark mb-4">
   <div class="container">
  <a href="/" th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</a>
  <ul class="navbar list-inline" style="height:1rem;">
-<li class="list-inline-item"><a href="/employee">従業員管理</a></li>
+<span sec:authorize="hasRole('ROLE_ADMIN')"><li class="list-inline-item"><a href="/employee">従業員管理</a></li></span>
          <!--   <li class="list-inline-item"><a href="/signup">従業員登録</a></li>
   <li class="list-inline-item"><a href="/server">出退勤</a></li>
      <li class="list-inline-item"><a href="/line">クライアント実験</a></li>
@@ -14,10 +14,8 @@
     <li class="list-inline-item"><a href="/msg">メッセージ</a></li>
         <li class="list-inline-item"><a href="/calendar/0">勤怠確認</a></li>
         <div th:if="${session != null}"><li class="list-inline-item"><a href="/login">ログイン</a></li></div>
-        <div th:if="${session == null}"><form th:action="@{/logout}" method="post" name="Form"><li class="list-inline-item"><a href="javascript:document.Form.submit()">ログアウト</a></form><div></div>
-<script type="text/javascript">function force_logout() {document.Form.submit();}</script>
- --></ul>
+        <div th:if="${session == null}"><form th:action="@{/logout}" method="post" name="Form"><li class="list-inline-item"><a href="javascript:document.Form.submit()">ログアウト</a></form><div></div>-->
+</ul>
  </div>
-
  </header>
  </div>

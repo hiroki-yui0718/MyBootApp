@@ -8,10 +8,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}"></script>
         <script src="https://kit.fontawesome.com/674e3e2851.js" crossorigin="anonymous"></script>
+
  </head>
  <body>
 <div th:include="header :: data"></div>
-<div class="container">
+<div onbeforeunload="force_logout();" class="container">
 <div class="row" style="border-bottom-style:solid;border-width:10px; border-color:#F5F5F5;">
 <div class="col-md-12"><p style="font-size:20px;">ホーム</p></div>
 </div>
@@ -38,7 +39,12 @@
 <a href="/calendar/0" style="text-decoration:none;"><div class="card"><i class="fas fa-tasks" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">勤怠管理</p></div></a>
 </div>
 <div class="col-md-3">
-<form th:action="@{/logout}" method="post" name="Form"><a href="javascript:document.Form.submit()" style="text-decoration:none;"><div class="card"><i class="fas fa-sign-in-alt" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">ログアウト</p></div></a></form>
+<div th:if="${session.isEmpty()}"><a href="/login"><div class="card"><i class="fas fa-sign-in-alt" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">ログイン</p></div></a></li></div>
+<div th:unless="${session.isEmpty()}"><form th:action="@{/logout}" method="post" name="Form"><a href="javascript:document.Form.submit()" style="text-decoration:none;">
+<div class="card">
+<i class="fas fa-sign-in-alt" style="font-size:30px; text-align:center; padding:30px 0px;"></i>
+<p style="padding:50px 0px; text-align:center; font-size:20px;">ログアウト</p></div></a></form>
+</div>
 </div>
 </div>
 </div>
@@ -54,6 +60,7 @@
 <div id="ppwj_45156faf-b8ee-492c-8ff0-1d8680106f56"></div><script type="text/javascript">var up = new Object();up["gid"]="ppwj_45156faf-b8ee-492c-8ff0-1d8680106f56";up["width"]=300;up["height"]=160;up["fontSize"]=12;up["lcolor"]="#208dc3";up["hcolor"]="#cbe6f3";up["bgcolor"]="#ffffff";up["label"]=true;up["hWidth"]=0;up["name"]=false;up["sname"]=false;up["unit"]=true;up["daysMax"]=3;up["temp"]=true;up["detailUntil"]=0;up["hourIndexOfADay"]=3;up["tempUnit"]="c";up["month"]=false;up["dayOfWeek"]=true;up["humidity"]=false;up["icon"]="icon_64_a";up["prec"]=true;up["coRain"]=false;up["wind"]=false;up["bStyle"]="-";up["bWidth"]=0;up["bColor"]="#208dc3";up["bRadius"]=false;up["bShadow"]=false;up["bPadding"]=0;up["rcode1"]=1218;up["rcode2"]=0;</script><script type="text/javascript" src="//weather.tmyymmt.net/bp1/js/bp1.js"></script></div>
 </div>
 </div>
+<script type="text/javascript">function force_logout() {document.Form.submit();}</script>
 <script>
 function set2fig(num) {
    // 桁数が1桁だったら先頭に0を加えて2桁に調整する
@@ -86,6 +93,7 @@ function getNow() {
 setInterval('showClock2()',1000);
 setInterval('getNow()',1000);
 </script>
+</div>
 </div>
 </body>
 </html>

@@ -50,7 +50,7 @@ public class ManagementService {
 	}
 	@Transactional
 	@Modifying
-	public int delAll() {
+	public int dropAll() {
 		// TODO 自動生成されたメソッド・スタブ
 		return (int)entityManager.createQuery("delete from Management").executeUpdate();
 		

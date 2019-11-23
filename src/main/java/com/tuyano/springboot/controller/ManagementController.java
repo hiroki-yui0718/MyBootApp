@@ -123,7 +123,7 @@ public class ManagementController {
 		mav.addObject("date",date);
 		setCal(date);
 		//		xここに削除文
-		service.delAll();
+		service.dropAll();
 		int j = startDay;
 		for(int i = 1;i <= lastDate;i++) {
 			Management manage = new Management();

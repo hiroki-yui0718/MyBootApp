@@ -18,7 +18,7 @@ public class SuicaService {
 	
 	@SuppressWarnings("unchecked")
 	public List<Suica> getAll() {
-		return (List<Suica>)entityManager.createQuery("from Suica order by id desc").getResultList();
+		return (List<Suica>)entityManager.createQuery("select Suica.idm,Suica.date,Suica.state,Suica.monthTime,Suica.dayTime,Account.username from Suica,Account where Suica.id = Account.id order by suica_id desc").getResultList();
 	}
 	public long findIdm(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm").setParameter("idm", idm).getSingleResult();
@@ -27,15 +27,15 @@ public class SuicaService {
 		return (long)entityManager.createQuery("select sum(time) from Suica where idm = :idm").setParameter("idm", idm).getSingleResult();
 	}
 	public Suica find(String idm) {
-		return (Suica)entityManager.createQuery("from Suica where idm = :idm order by id desc").setParameter("idm", idm).setMaxResults(1).getSingleResult();
+		return (Suica)entityManager.createQuery("from Suica where idm = :idm order by suica_id desc").setParameter("idm", idm).setMaxResults(1).getSingleResult();
 	}
 	public int findMonth(String idm) {
-		LocalDateTime d =  (LocalDateTime)entityManager.createQuery("select date from Suica where idm = :idm and state = :state order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
+		LocalDateTime d =  (LocalDateTime)entityManager.createQuery("select date from Suica where idm = :idm and state = :state order by suica_id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
 		return d.getMonthValue();
 	}
 	public String findMonthTime(String idm) {
 		// TODO 自動生成されたメソッド・スタブ
-		 return (String)entityManager.createQuery("select monthTime from Suica where idm = :idm and state = :state order by id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
+		 return (String)entityManager.createQuery("select monthTime from Suica where idm = :idm and state = :state order by suica_id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
 	}
 	public long findState(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm and state = :state").setParameter("idm", idm).setParameter("state", "退勤").getSingleResult();

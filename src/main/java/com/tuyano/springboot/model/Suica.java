@@ -19,7 +19,7 @@ public class Suica {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private long id;
+	private long suica_id;
 	@Column
 	private String idm;
 	@Column
@@ -40,11 +40,11 @@ public class Suica {
 		account =new Account();
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setSuicaId(long suica_id) {
+		this.suica_id = suica_id;
 	}
-	public long getId() {
-		return id;
+	public long getSuicaId() {
+		return suica_id;
 	}
 	public void setIdm(String idm) {
 		this.idm = idm;
