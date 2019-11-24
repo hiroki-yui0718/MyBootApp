@@ -15,7 +15,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception{
 		//x認証設定を書く方
 		http.formLogin().loginPage("/login").successForwardUrl("/").permitAll();
-		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/signup").permitAll().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/signup").permitAll().antMatchers("/server").permitAll().anyRequest().authenticated();
 		http.logout().logoutUrl("/logout").permitAll();
 		http.logout().logoutSuccessUrl("/").permitAll();
 		http.authorizeRequests().antMatchers("/").hasRole("ADMIN");

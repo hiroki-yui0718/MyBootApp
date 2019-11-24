@@ -112,8 +112,12 @@ public ModelAndView index(ModelAndView mav) {
 	data.add(new DataObject (0,"taro","taro@yamada"));
 	data.add(new DataObject (1,"hanako","hanako@flower"));
 	data.add(new DataObject(2,"sachiko","sachiko@happy"));
+	try {
 	List<Suica> list = service2.getAll();
 	mav.addObject("datalist",list);
+	}catch(NullPointerException e) {
+		e.printStackTrace();
+	}
 	mav.addObject("data",data);
 	return mav;
 }

@@ -18,7 +18,7 @@ public class SuicaService {
 	
 	@SuppressWarnings("unchecked")
 	public List<Suica> getAll() {
-		return (List<Suica>)entityManager.createQuery("select Suica.idm,Suica.date,Suica.state,Suica.monthTime,Suica.dayTime,Account.username from Suica,Account where Suica.id = Account.id order by suica_id desc").getResultList();
+		return (List<Suica>)entityManager.createQuery("from Suica order by suica_id desc").getResultList();
 	}
 	public long findIdm(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm").setParameter("idm", idm).getSingleResult();

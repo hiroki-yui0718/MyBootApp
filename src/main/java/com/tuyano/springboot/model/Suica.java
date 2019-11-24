@@ -33,6 +33,7 @@ public class Suica {
 	private String monthTime;
 
 	@ManyToOne
+	@JoinColumn(name="username")
 	private Account account;
 	
 	public Suica() {

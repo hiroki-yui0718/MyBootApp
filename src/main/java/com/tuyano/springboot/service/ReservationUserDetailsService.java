@@ -30,7 +30,8 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 	private EntityManager entityManager;
 	
 	public Account findOne(String username) {
-		return (Account)entityManager.createQuery("from Account where username = :username").setParameter("username", username).getSingleResult();
+		long id = (long)entityManager.createQuery("select id from Account where username = :username").setParameter("username", username).getSingleResult();
+		return (Account)entityManager.createQuery("from Account where id = :id").setParameter("id", id).getSingleResult();
 		//x一意を指定しないといけない
 	}
 	@Transactional
@@ -55,13 +56,10 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 		String role = account.getRole();
 		if(role.equals("ADMIN")) {
 			roles = EnumSet.of(ExampleRole.ROLE_ADMIN);
-			System.out.println(1);
 		}else if(role.equals("MANAGER")){
 			roles = EnumSet.of(ExampleRole.ROLE_MANAGER);
-			System.out.println(2);
 		}else if(role.equals("EMPLOYEE")){
 			roles = EnumSet.of(ExampleRole.ROLE_EMPLOYEE);
-			System.out.println(3);
 		}
 		Collection<? extends GrantedAuthority> authorities = roles.stream()
 					.map(ExampleRole::name).map(SimpleGrantedAuthority::new)
