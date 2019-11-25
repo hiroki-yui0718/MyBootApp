@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+<title>Top Page</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}"></script>
+ </head>
+ <body>
+<div th:include="header :: data"></div>
+<div class="container">
+
+<table class="table">
+<thead class="thead-dark"><tr><th>氏名</th><th>IDm</th><th>ロール</th><th></th><th></th></tr></thead>
+<tbody th:each="obj,obj2:${datalist}">
+<form action="#" th:action="@{|/admin/${obj.id}|}" method="post">
+<tr>
+<input type="hidden" name="id" th:value="${obj.id}"/>
+<td th:text="${obj.username}"></td>
+<td th:text="${obj.idm}"></td>
+<td><select name="role">
+<option th:text="${obj.role}" th:value="${obj.role}">ADMIN</option>
+<option value="ADMIN">ADMIN</option>
+<option value="MANAGER">MANAGER</option>
+<option value="EMPLOYEE">EMPLOYEE</option>
+</select></td>
+<td><input type="submit" class="btn btn-primary" value="登録" name="update"></td>
+<td><input type="submit" class="btn btn-danger"  name="delete" value="削除" /></td>
+</tr></form></tbody>
+</table>
+</div>
+</body>
+</html>

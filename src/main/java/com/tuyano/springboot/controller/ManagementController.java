@@ -28,13 +28,16 @@ import com.tuyano.springboot.model.Manager;
 import com.tuyano.springboot.repositories.ManagementRepository;
 import com.tuyano.springboot.repositories.ManagerRepository;
 import com.tuyano.springboot.service.ManagementService;
+import com.tuyano.springboot.service.ReservationUserDetailsService;
 
 @Controller
 public class ManagementController {
 
 	@Autowired
 	ManagementService service;
-
+	@Autowired
+	ReservationUserDetailsService service2;
+	
 	@Autowired
 	ManagementRepository repository;
 	@Autowired
@@ -95,10 +98,9 @@ public class ManagementController {
 		this.lastDate = cal.get(Calendar.DATE);
 
 	}
-	@RequestMapping(value="/calendar",method=RequestMethod.POST)
-	public ModelAndView index(ModelAndView mav,HttpServletRequest request,Authentication authentication){
-		User userDetail = (User)authentication.getPrincipal();
-		String name = userDetail.getUsername();
+	@RequestMapping(value="/calendar/{id}",method=RequestMethod.POST)
+	public ModelAndView index(@PathVariable long id,ModelAndView mav,HttpServletRequest request,Authentication authentication){
+		String name = service.findName(id);
 		int num = Integer.parseInt(request.getParameter("date"));
 		setCal(num);
 		for(int i = 1;i <= lastDate;i++) {
@@ -112,14 +114,13 @@ public class ManagementController {
 			mana.setScheEndTime(str2);
 			repository2.saveAndFlush(mana);
 		}
-		mav.setViewName("/calendar");
-		mav = new ModelAndView("redirect:/calendar/" + num);
+		mav.setViewName("calendar");
+		mav = new ModelAndView("redirect:/calendar/{id}/" + num);
 		return mav;
 	}
-	@RequestMapping(value="/calendar/{date}",method=RequestMethod.GET)
-	public ModelAndView send(@PathVariable int date,HttpSession session,ModelAndView mav,Authentication authentication){
-		User userDetail = (User)authentication.getPrincipal();
-		String name = userDetail.getUsername();
+	@RequestMapping(value="/calendar/{id}/{date}",method=RequestMethod.GET)
+	public ModelAndView send(@PathVariable int date,@PathVariable long id,HttpServletRequest request,HttpSession session,ModelAndView mav,Authentication authentication){
+		String name = service.findName(id);
 		mav.addObject("date",date);
 		setCal(date);
 		//		xここに削除文
@@ -186,6 +187,7 @@ public class ManagementController {
 		mav.addObject("back",date-1);
 		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
 		mav.setViewName("calendar");
+		mav.addObject("id",id);
 		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
 		return mav;
 	}
@@ -206,5 +208,30 @@ public class ManagementController {
 			str1 = null;
 		}
 		return str1;
+	}
+	@RequestMapping(value = "/management", method = RequestMethod.GET)
+	public ModelAndView show(ModelAndView mav) {
+		List<Account> list = service.findDataAll();
+		mav.addObject("datalist",list);
+		mav.setViewName("management");
+		return mav;
+	}
+	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	public ModelAndView get(ModelAndView mav) {
+		List<Account> list = service.findDataAll();
+		mav.addObject("datalist",list);
+		mav.setViewName("admin");
+		return mav;
+	}
+	@RequestMapping(value = "/admin/{id}", params="delete",method = RequestMethod.POST)
+	public ModelAndView delete(@PathVariable long id,HttpServletRequest request,ModelAndView mav) {
+		repository.deleteById(id);
+		return mav = new ModelAndView("redirect:/admin");
+	}
+	@RequestMapping(value = "/admin/{id}", params="update",method = RequestMethod.POST)
+	public ModelAndView post(@PathVariable long id,HttpServletRequest request,ModelAndView mav) {
+		String role = request.getParameter("role");		
+		service2.RoleUpdate(id,role);
+		return mav = new ModelAndView("redirect:/admin");
 	}
 }

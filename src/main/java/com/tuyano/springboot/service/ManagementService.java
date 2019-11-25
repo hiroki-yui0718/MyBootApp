@@ -69,5 +69,9 @@ public class ManagementService {
 	public List<Account> findDataAll(){
 		return (List<Account>)entityManager.createQuery("from Account").getResultList(); 
 	}
+	public String findName(long id) {
+		return (String)entityManager.createQuery("select username from Account where id = :id").setParameter("id",id).getSingleResult(); 
+		
+	}
 	
 }

@@ -13,21 +13,13 @@
 <div class="container">
 
 <table class="table">
-<thead class="thead-dark"><tr><th>氏名</th><th>IDm</th><th>ロール</th><th></th><th></th></tr></thead>
-<tbody>
-<form action="#" th:action="@{/employee}" th:object="${formModel}" method="post">
-<tr th:each="obj:${datalist}">
-<input type="hidden" name="id" th:value="${obj.id}"/>
+<thead class="thead-dark"><tr><th>氏名</th><th>IDm</th><th></th></tr></thead>
+<tbody th:each="obj:${datalist}">
+<form action="#" th:action="@{|/calendar/${obj.id}/0|}" th:object="${formModel}" method="get">
+<tr>
 <td th:text="${obj.username}"></td>
 <td th:text="${obj.idm}"></td>
-<td ><select name="role">
-<option th:text="${obj.role}" th:value="${obj.role}">ADMIN</option>
-<option value="ADMIN">ADMIN</option>
-<option value="MANAGER">MANAGER</option>
-<option value="EMPLOYEE">EMPLOYEE</option>
-</select></td>
-<td><input type="submit" class="btn btn-primary" value="登録" name="update"></td>
-<td><input type="submit" class="btn btn-danger"  name="delete" value="削除" /></td>
+<td><input type="submit" class="btn btn-primary" value="勤怠修正"></td>
 </tr></form></tbody>
 </table>
 </div>

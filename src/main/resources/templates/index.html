@@ -36,7 +36,15 @@
 <a href="/signup" style="text-decoration:none;"><div class="card"><i class="far fa-user-circle" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">従業員登録</p></div></a>
 </div>
 <div class="col-md-3">
-<a href="/calendar/0" style="text-decoration:none;"><div class="card"><i class="fas fa-tasks" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">勤怠管理</p></div></a>
+<div th:if="${session.isEmpty()}">
+<a href="/management" style="text-decoration:none;"><div class="card"><i class="fas fa-tasks" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">勤怠管理</p></div></a>
+</div>
+<span sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')">
+<a th:href="|/calendar/${id}/0|" style="text-decoration:none;"><div class="card"><i class="fas fa-tasks" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">勤怠管理</p></div></a>
+</span>
+<span sec:authorize="hasRole('ROLE_MANAGER')">
+<a href="/management" style="text-decoration:none;"><div class="card"><i class="fas fa-tasks" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">勤怠管理</p></div></a>
+</span>
 </div>
 <div class="col-md-3">
 <div th:if="${session.isEmpty()}"><a href="/login"><div class="card"><i class="fas fa-sign-in-alt" style="font-size:30px; text-align:center; padding:30px 0px;"></i><p style="padding:50px 0px; text-align:center; font-size:20px;">ログイン</p></div></a></li></div>

@@ -15,7 +15,7 @@ import com.tuyano.springboot.model.Suica;
 public class SuicaService {
 	@PersistenceContext
 	EntityManager entityManager;
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Suica> getAll() {
 		return (List<Suica>)entityManager.createQuery("from Suica order by suica_id desc").getResultList();
@@ -35,7 +35,7 @@ public class SuicaService {
 	}
 	public String findMonthTime(String idm) {
 		// TODO 自動生成されたメソッド・スタブ
-		 return (String)entityManager.createQuery("select monthTime from Suica where idm = :idm and state = :state order by suica_id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
+		return (String)entityManager.createQuery("select monthTime from Suica where idm = :idm and state = :state order by suica_id desc").setParameter("idm", idm).setParameter("state", "退勤").setMaxResults(1).getSingleResult();
 	}
 	public long findState(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Suica where idm = :idm and state = :state").setParameter("idm", idm).setParameter("state", "退勤").getSingleResult();
@@ -47,5 +47,9 @@ public class SuicaService {
 	public String findName(String idm) {
 		return (String)entityManager.createQuery("select username from Account where idm = :idm").setParameter("idm", idm).getSingleResult();
 	}
-
+	public long findId(String username) {
+		return (long)entityManager.createQuery("select id from Account where username = :username").setParameter("username", username).getSingleResult();
+	}
 }
+
+

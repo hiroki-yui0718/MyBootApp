@@ -3,7 +3,7 @@
   <div class="container">
  <a href="/" th:text="#{content.title}" class="text-light" style="font-size:1.8rem;">Hello page</a>
  <ul class="navbar list-inline" style="height:1rem;">
-<span sec:authorize="hasRole('ROLE_ADMIN')"><li class="list-inline-item"><a href="/employee">従業員管理</a></li></span>
+<span sec:authorize="hasRole('ROLE_ADMIN')"><li class="list-inline-item"><a href="/admin">従業員管理</a></li></span>
          <!--   <li class="list-inline-item"><a href="/signup">従業員登録</a></li>
   <li class="list-inline-item"><a href="/server">出退勤</a></li>
      <li class="list-inline-item"><a href="/line">クライアント実験</a></li>

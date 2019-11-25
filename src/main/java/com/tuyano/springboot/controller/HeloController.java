@@ -16,9 +16,14 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
+
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -99,7 +104,7 @@ public ModelAndView show(@PathVariable int id,ModelAndView mav) {
 	return mav;
 }
 @RequestMapping("/")
-public ModelAndView index(ModelAndView mav) {
+public ModelAndView index(ModelAndView mav,Authentication authentication) {
 	mav.setViewName("index");
 	mav.addObject("msg","message 1<hr>message 2<br>message 3");
 //	DataObject obj = new DataObject(123,"hanako","hanako@flower");
@@ -115,6 +120,10 @@ public ModelAndView index(ModelAndView mav) {
 	try {
 	List<Suica> list = service2.getAll();
 	mav.addObject("datalist",list);
+	User userDetail = (User)authentication.getPrincipal();
+	String name = userDetail.getUsername();
+	long id = service2.findId(name);
+	mav.addObject("id",id);
 	}catch(NullPointerException e) {
 		e.printStackTrace();
 	}
