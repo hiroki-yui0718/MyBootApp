@@ -15,7 +15,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name="account")
 public class Account{
+	@OneToMany(mappedBy = "account")
+	private List<Manager> managers;
 	
+	public void setManagers(List<Manager> managers) {
+		this.managers = managers;
+	}
+	public List<Manager> getManagers(){
+		return managers;
+	}
 	@OneToMany(mappedBy = "account")
 	private List<Suica> suicas;
 	

@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,9 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tuyano.springboot.MyDataDaoImpl;
+import com.tuyano.springboot.model.Manager;
 import com.tuyano.springboot.model.MyData;
 import com.tuyano.springboot.model.Suica;
 import com.tuyano.springboot.repositories.MyDataRepository;
+import com.tuyano.springboot.service.ManagementService;
 import com.tuyano.springboot.service.MyDataService;
 import com.tuyano.springboot.service.SuicaService;
 
@@ -43,6 +46,8 @@ public class HeloController {
 
 	@Autowired
 	SuicaService service2;
+	@Autowired
+	ManagementService service3;
 	@PersistenceContext
 	EntityManager entityManager; //
 
@@ -125,6 +130,12 @@ public ModelAndView index(ModelAndView mav,Authentication authentication) {
 	long id = service2.findId(name);
 	mav.addObject("id",id);
 	}catch(NullPointerException e) {
+		e.printStackTrace();
+	}
+	try{
+		Manager manager = service3.getLog();
+		mav.addObject("data",manager);
+	}catch(NoResultException e) {
 		e.printStackTrace();
 	}
 	mav.addObject("data",data);

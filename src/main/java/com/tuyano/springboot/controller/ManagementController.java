@@ -100,18 +100,27 @@ public class ManagementController {
 	}
 	@RequestMapping(value="/calendar/{id}",method=RequestMethod.POST)
 	public ModelAndView index(@PathVariable long id,ModelAndView mav,HttpServletRequest request,Authentication authentication){
+		
 		String name = service.findName(id);
 		int num = Integer.parseInt(request.getParameter("date"));
 		setCal(num);
 		for(int i = 1;i <= lastDate;i++) {
 			Manager mana = new Manager();
 			LocalDate t = LocalDate.of(year,month,i);
-			mana.setIdm(service.getIdm(name));
+			LocalDateTime t2 = LocalDateTime.now();
+			Account account = service2.findAll(name);
+			mana.setAccount(account);
+			mana.setName(name);
 			mana.setDate(t);
 			String str1 = request.getParameter("scheStartTime" + i);
 			String str2 = request.getParameter("scheEndTime" + i);
 			mana.setScheStratTime(str1);
 			mana.setScheEndTime(str2);
+			mana.setCreatedTime(t2);
+			User userDetail = (User)authentication.getPrincipal();
+			String str = userDetail.getUsername();
+			Account account2 = service2.findAll(str);
+			mana.setAccount(account2);
 			repository2.saveAndFlush(mana);
 		}
 		mav.setViewName("calendar");
@@ -126,6 +135,7 @@ public class ManagementController {
 		//		xここに削除文
 		service.dropAll();
 		int j = startDay;
+		String scheSumTime =null;
 		for(int i = 1;i <= lastDate;i++) {
 			Management manage = new Management();
 			LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
@@ -141,8 +151,9 @@ public class ManagementController {
 			if(j == 8)j = 1;
 			LocalDateTime t4 = null;
 			String str2 = null;
+			String str1 = null;
 			try{
-				String str1 = service.findScheStartTime(name,t3);
+				str1 = service.findScheStartTime(name,t3);
 				manage.setScheStartTime(str1);
 				
 			}catch(NoResultException e) {
@@ -181,15 +192,40 @@ public class ManagementController {
 			}catch(NoResultException e) {
 				manage.setSumTime(null);
 			}
+			scheSumTime += diff2(str1,str2);
 			repository.saveAndFlush(manage);
 		}
 		mav.addObject("next",date+1);
 		mav.addObject("back",date-1);
 		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
+		if(scheSumTime == null) {
+			mav.addObject("sche","勤務時間未入力です。");
+		}else {
+			mav.addObject("sche","勤務予定時間は" + scheSumTime + "です。");
+		}
 		mav.setViewName("calendar");
 		mav.addObject("id",id);
 		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
 		return mav;
+	}
+	public String diff2(String t1, String t2) {
+		// TODO 自動生成されたメソッド・スタブ
+		String str1;
+		try {
+		String[] str = t1.split(":",0);
+		LocalTime t3 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
+		String[] str2 = t1.split(":",0);
+		LocalTime t4 = LocalTime.of(Integer.valueOf(str2[0]), Integer.valueOf(str2[1]),0);
+		Duration d = Duration.between(t4, t3);
+		if(d.toSeconds() <0) {
+			str1 = "-" + monthTime((int)-d.toSeconds());
+		}else {
+			str1 = monthTime((int)d.toSeconds());
+		}
+		}catch(NullPointerException e) {
+			str1 = null;
+		}
+		return str1;
 	}
 	public String diff(LocalDateTime t4, String str2) {
 		// TODO 自動生成されたメソッド・スタブ

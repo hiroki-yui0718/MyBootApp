@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.tuyano.springboot.model.Account;
 import com.tuyano.springboot.model.Management;
+import com.tuyano.springboot.model.Manager;
 
 
 @Service
@@ -72,6 +73,10 @@ public class ManagementService {
 	public String findName(long id) {
 		return (String)entityManager.createQuery("select username from Account where id = :id").setParameter("id",id).getSingleResult(); 
 		
+	}
+	public Manager getLog() {
+		// TODO 自動生成されたメソッド・スタブ
+		return (Manager)entityManager.createQuery("from Manager order by id desc").setMaxResults(1).getSingleResult();
 	}
 	
 }
