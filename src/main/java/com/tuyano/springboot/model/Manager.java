@@ -21,11 +21,6 @@ public class Manager {
 	private long id;
 	@Column
 	private String name;
-	
-	public Manager() {
-		super();
-		account =new Account();
-	}
 	@Column
 	private LocalDate date;
 	@Column
@@ -37,7 +32,10 @@ public class Manager {
 	@ManyToOne
 	@JoinColumn(name="username")
 	private Account account;
-
+	public Manager() {
+		super();
+		account =new Account();
+	}
 	public void setId(long id) {
 		this.id = id;
 	}

@@ -37,7 +37,7 @@ public class Account{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private long id;
-	@Column(unique=true)
+	@Column
 	private String idm;
 	@Column
 	private String username;

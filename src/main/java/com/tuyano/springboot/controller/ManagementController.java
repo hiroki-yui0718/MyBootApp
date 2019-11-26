@@ -37,7 +37,7 @@ public class ManagementController {
 	ManagementService service;
 	@Autowired
 	ReservationUserDetailsService service2;
-	
+
 	@Autowired
 	ManagementRepository repository;
 	@Autowired
@@ -76,15 +76,15 @@ public class ManagementController {
 
 		int i = 0;
 		while(true) {
-		if(month > 12) { //NEXT
-			this.month -= 12;
-			i++;
-		}if(month < 1){ //BACK
-			this.month += 12;
-			i--;
-		}else if(0 < month && 13 > month){
-			break;
-		}
+			if(month > 12) { //NEXT
+				this.month -= 12;
+				i++;
+			}if(month < 1){ //BACK
+				this.month += 12;
+				i--;
+			}else if(0 < month && 13 > month){
+				break;
+			}
 		}
 		this.year = cal.get(Calendar.YEAR) + i;
 
@@ -100,7 +100,7 @@ public class ManagementController {
 	}
 	@RequestMapping(value="/calendar/{id}",method=RequestMethod.POST)
 	public ModelAndView index(@PathVariable long id,ModelAndView mav,HttpServletRequest request,Authentication authentication){
-		
+
 		String name = service.findName(id);
 		int num = Integer.parseInt(request.getParameter("date"));
 		setCal(num);
@@ -155,7 +155,7 @@ public class ManagementController {
 			try{
 				str1 = service.findScheStartTime(name,t3);
 				manage.setScheStartTime(str1);
-				
+
 			}catch(NoResultException e) {
 				manage.setScheStartTime(null);
 			}
@@ -192,14 +192,18 @@ public class ManagementController {
 			}catch(NoResultException e) {
 				manage.setSumTime(null);
 			}
-			scheSumTime += diff2(str1,str2);
+			if(diff2(str1,str2) != 0) {
+				scheSumTime += diff2(str1,str2);
+			}
+
+
 			repository.saveAndFlush(manage);
 		}
 		mav.addObject("next",date+1);
 		mav.addObject("back",date-1);
 		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
 		if(scheSumTime == null) {
-			mav.addObject("sche","勤務時間未入力です。");
+			mav.addObject("sche","勤務予定時間は未入力です。");
 		}else {
 			mav.addObject("sche","勤務予定時間は" + scheSumTime + "です。");
 		}
@@ -208,38 +212,34 @@ public class ManagementController {
 		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
 		return mav;
 	}
-	public String diff2(String t1, String t2) {
+	public int diff2(String t1, String t2) {
 		// TODO 自動生成されたメソッド・スタブ
-		String str1;
+		int sec;
 		try {
-		String[] str = t1.split(":",0);
-		LocalTime t3 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
-		String[] str2 = t1.split(":",0);
-		LocalTime t4 = LocalTime.of(Integer.valueOf(str2[0]), Integer.valueOf(str2[1]),0);
-		Duration d = Duration.between(t4, t3);
-		if(d.toSeconds() <0) {
-			str1 = "-" + monthTime((int)-d.toSeconds());
-		}else {
-			str1 = monthTime((int)d.toSeconds());
-		}
+			String[] str = t1.split(":",0);
+			LocalTime t3 = LocalTime.of(Integer.parseInt(str[0]), Integer.valueOf(str[1]),0);
+			String[] str2 = t1.split(":",0);
+			LocalTime t4 = LocalTime.of(Integer.valueOf(str2[0]), Integer.valueOf(str2[1]),0);
+			Duration d = Duration.between(t4, t3);
+			sec = (int)d.toSeconds();
 		}catch(NullPointerException e) {
-			str1 = null;
+			sec = 0;
 		}
-		return str1;
+		return sec;
 	}
 	public String diff(LocalDateTime t4, String str2) {
 		// TODO 自動生成されたメソッド・スタブ
 		String str1;
 		try {
-		String[] str = str2.split(":",0);
-		LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
-		LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
-		Duration d = Duration.between(t2, t);
-		if(d.toSeconds() <0) {
-			str1 = "-" + monthTime((int)-d.toSeconds());
-		}else {
-			str1 = monthTime((int)d.toSeconds());
-		}
+			String[] str = str2.split(":",0);
+			LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
+			LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
+			Duration d = Duration.between(t2, t);
+			if(d.toSeconds() <0) {
+				str1 = "-" + monthTime((int)-d.toSeconds());
+			}else {
+				str1 = monthTime((int)d.toSeconds());
+			}
 		}catch(NullPointerException e) {
 			str1 = null;
 		}

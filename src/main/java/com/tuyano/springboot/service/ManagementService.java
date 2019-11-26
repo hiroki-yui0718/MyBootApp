@@ -57,14 +57,11 @@ public class ManagementService {
 		
 	}
 	public String findScheStartTime(String name, LocalDate t) {
-		// TODO 自動生成されたメソッド・スタブ
-		String idm = getIdm(name);
-		return (String)entityManager.createQuery("select scheStartTime from Manager where idm = :idm and date = :str order by id desc").setParameter("idm", idm).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+		return (String)entityManager.createQuery("select scheStartTime from Manager where name = :name and date = :str order by id desc").setParameter("name", name).setParameter("str", t).setMaxResults(1).getSingleResult(); 
 	}
 	public String findScheEndTime(String name, LocalDate t) {
-		// TODO 自動生成されたメソッド・スタブ
-		String idm = getIdm(name);
-		return (String)entityManager.createQuery("select scheEndTime from Manager where idm = :idm and date = :str order by id desc").setParameter("idm", idm).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+		// TODO 自動生成されたメソッド・スタブ\
+		return (String)entityManager.createQuery("select scheEndTime from Manager where name = :name and date = :str order by id desc").setParameter("name", name).setParameter("str", t).setMaxResults(1).getSingleResult(); 
 	}
 	@SuppressWarnings("unchecked")
 	public List<Account> findDataAll(){
