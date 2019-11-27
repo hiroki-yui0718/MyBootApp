@@ -45,7 +45,8 @@ public class SuicaService {
 		return (Account)entityManager.createQuery("from Account where idm = :idm").setParameter("idm", idm).getSingleResult();
 	}
 	public String findName(String idm) {
-		return (String)entityManager.createQuery("select username from Account where idm = :idm").setParameter("idm", idm).getSingleResult();
+			long id = (long)entityManager.createQuery("select id from Account where idm = :idm").setParameter("idm", idm).setMaxResults(1).getSingleResult();
+		return (String)entityManager.createQuery("select username from Account where id = :id").setParameter("id", id).getSingleResult();
 	}
 	public long findId(String username) {
 		return (long)entityManager.createQuery("select id from Account where username = :username").setParameter("username", username).getSingleResult();

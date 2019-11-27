@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.tuyano.springboot.model.Account;
 import com.tuyano.springboot.model.Management;
 import com.tuyano.springboot.model.Manager;
+import com.tuyano.springboot.model.Suica;
 import com.tuyano.springboot.repositories.ManagementRepository;
 import com.tuyano.springboot.repositories.ManagerRepository;
 import com.tuyano.springboot.service.ManagementService;
@@ -55,6 +56,11 @@ public class ManagementController {
 		int sec = t.getSecond();
 		String str = hour + ":" + min +":" + sec;
 		return str;
+	}
+	public LocalTime dateChange(String str) {
+		String[] str2= str.split(":",0);
+		LocalTime t = LocalTime.of(Integer.parseInt(str2[0]),Integer.parseInt(str2[1]),Integer.parseInt(str2[2]));
+		return t; 
 	}
 	public String monthTime(int sec) {
 		int hour = sec / 3600;
@@ -117,6 +123,12 @@ public class ManagementController {
 			mana.setScheStratTime(str1);
 			mana.setScheEndTime(str2);
 			mana.setCreatedTime(t2);
+			String str3 = request.getParameter("startTime" + i);
+			String str4 = request.getParameter("endTime" + i);
+			LocalDateTime t3 = LocalDateTime.of(year,month,i,0,0,0);
+			LocalDateTime t4 = LocalDateTime.of(year,month,i,23,59,59);
+			service.startUpdate(dateChange(str3),t3,t4);
+			service.endUpdate(dateChange(str4),t3,t4);
 			User userDetail = (User)authentication.getPrincipal();
 			String str = userDetail.getUsername();
 			Account account2 = service2.findAll(str);
@@ -136,6 +148,7 @@ public class ManagementController {
 		service.dropAll();
 		int j = startDay;
 		String scheSumTime =null;
+		int sumTime = 0;
 		for(int i = 1;i <= lastDate;i++) {
 			Management manage = new Management();
 			LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
@@ -192,13 +205,12 @@ public class ManagementController {
 			}catch(NoResultException e) {
 				manage.setSumTime(null);
 			}
-			if(diff2(str1,str2) != 0) {
-				scheSumTime += diff2(str1,str2);
-			}
+			sumTime += diff2(str1,str2);
 
 
 			repository.saveAndFlush(manage);
 		}
+		scheSumTime = monthTime(sumTime);
 		mav.addObject("next",date+1);
 		mav.addObject("back",date-1);
 		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
@@ -215,14 +227,15 @@ public class ManagementController {
 	public int diff2(String t1, String t2) {
 		// TODO 自動生成されたメソッド・スタブ
 		int sec;
-		try {
+		if(!(t1.equals("")&&t2.equals(""))) {
 			String[] str = t1.split(":",0);
-			LocalTime t3 = LocalTime.of(Integer.parseInt(str[0]), Integer.valueOf(str[1]),0);
-			String[] str2 = t1.split(":",0);
-			LocalTime t4 = LocalTime.of(Integer.valueOf(str2[0]), Integer.valueOf(str2[1]),0);
-			Duration d = Duration.between(t4, t3);
+			LocalTime t3 = LocalTime.of(Integer.parseInt(str[0]), Integer.parseInt(str[1]),0);
+			String[] str2 = t2.split(":",0);
+			LocalTime t4 = LocalTime.of(Integer.parseInt(str2[0]), Integer.parseInt(str2[1]),0);
+			Duration d = Duration.between(t3, t4);
 			sec = (int)d.toSeconds();
-		}catch(NullPointerException e) {
+			System.out.println(sec);
+		}else {
 			sec = 0;
 		}
 		return sec;
@@ -231,15 +244,21 @@ public class ManagementController {
 		// TODO 自動生成されたメソッド・スタブ
 		String str1;
 		try {
+			if(!str2.equals("")) {
 			String[] str = str2.split(":",0);
 			LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
 			LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
 			Duration d = Duration.between(t2, t);
+			
 			if(d.toSeconds() <0) {
 				str1 = "-" + monthTime((int)-d.toSeconds());
 			}else {
 				str1 = monthTime((int)d.toSeconds());
 			}
+			}else {
+				str1 = null;
+			}
+			
 		}catch(NullPointerException e) {
 			str1 = null;
 		}

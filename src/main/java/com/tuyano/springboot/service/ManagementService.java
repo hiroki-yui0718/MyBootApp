@@ -75,5 +75,17 @@ public class ManagementService {
 		// TODO 自動生成されたメソッド・スタブ
 		return (Manager)entityManager.createQuery("from Manager order by id desc").setMaxResults(1).getSingleResult();
 	}
+	@Transactional
+	@Modifying
+	public void startUpdate(LocalTime str, LocalDateTime t3, LocalDateTime t4) {
+		// TODO 自動生成されたメソッド・スタブ
+		entityManager.createQuery("update Suica set dayTime = :str where state = :state and date between :t3 and :t4 order by suica_id asc").setMaxResults(1).setParameter("state", "出勤").setParameter("str", str).setParameter("t3", t3).setParameter("t4", t4).executeUpdate();
+	}
+	@Transactional
+	@Modifying
+	public void endUpdate(LocalTime str, LocalDateTime t3, LocalDateTime t4) {
+		// TODO 自動生成されたメソッド・スタブ
+		entityManager.createQuery("update Suica set dayTime = :str where state = :state and date between :t3 and :t4 order by suica_id desc").setMaxResults(1).setParameter("state", "退勤").setParameter("str", str).setParameter("t3", t3).setParameter("t4", t4).executeUpdate();
+	}
 	
 }

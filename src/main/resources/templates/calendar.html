@@ -28,24 +28,22 @@
 <tr th:each="obj,obj2:${datalist}">
 <td th:text="${obj.day}"></td>
 <td th:text="${obj.week}"></td>
-<span sec:authorize="hasRole('ROLE_USER')"><td class="text-center" th:text="${obj.scheStartTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_ADMIN')"><td class="text-center" th:text="${obj.scheStartTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_MANAGER')"><td class="text-center"><input type="text" th:name="|scheStartTime${obj2.count}|" th:value="${obj.scheStartTime}" size="5" maxlength="5"></td></span>
-<span sec:authorize="hasRole('ROLE_USER')"><td class="text-center" th:text="${obj.scheEndTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_ADMIN')"><td class="text-center" th:text="${obj.scheEndTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_MANAGER')"><td class="text-center"><input type="text" th:name="|scheEndTime${obj2.count}|" th:value="${obj.scheEndTime}" size="5" maxlength="5"></td></span>
-<span sec:authorize="hasRole('ROLE_USER')"><td th:text="${obj.startTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_USER')"><td th:text="${obj.endTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_USER')"><td th:text="${obj.time}"></td></span>
-<span sec:authorize="hasRole('ROLE_USER')"><td th:text="${obj.sumTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_ADMIN')"><td th:text="${obj.startTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_ADMIN')"><td th:text="${obj.endTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_ADMIN')"><td th:text="${obj.time}"></td></span>
-<span sec:authorize="hasRole('ROLE_ADMIN')"><td th:text="${obj.sumTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_MANAGER')"><td><input type="text" th:value="${obj.startTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_MANAGER')"><td><input type="text" th:value="${obj.endTime}"></td></span>
-<span sec:authorize="hasRole('ROLE_MANAGER')"><td><input type="text" th:value="${obj.time}"></td></span>
-<span sec:authorize="hasRole('ROLE_A\MANGER')"><td><input type="text" th:value="${obj.sumTime}"></td></span>
+
+<span sec:authorize="hasRole('ROLE_MANAGER')">
+<td class="text-center"><input type="text" th:name="|scheStartTime${obj2.count}|" th:value="${obj.scheStartTime}" size="5" maxlength="5"></td>
+<td><input type="text" th:name="|scheEndTime${obj2.count}|" th:value="${obj.scheEndTime}" size="5" maxlength="5"></td>
+<td><input type="text" th:name="|startTime${obj2.count}|" th:value="${obj.startTime}"></td>
+<td><input type="text" th:name="|endTime${obj2.count}|" th:value="${obj.endTime}"></td>
+</span>
+
+<span sec:authorize="hasRole('ROLE_ADMIN') and hasRole('ROLE_USER')">
+<td class="text-center" th:text="${obj.scheStartTime}"></td>
+<td class="text-center" th:text="${obj.scheEndTime}"></td>
+<td th:text="${obj.startTime}"></td>
+<td th:text="${obj.endTime}"></td>
+</span>
+<td th:text="${obj.time}"></td>
+<td th:text="${obj.sumTime}"></td>
 </tr>
 </tbody>
 </table>
