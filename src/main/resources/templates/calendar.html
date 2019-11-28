@@ -36,7 +36,13 @@
 <td><input type="text" th:name="|endTime${obj2.count}|" th:value="${obj.endTime}"></td>
 </span>
 
-<span sec:authorize="hasRole('ROLE_ADMIN') and hasRole('ROLE_USER')">
+<span sec:authorize="hasRole('ROLE_USER')">
+<td class="text-center" th:text="${obj.scheStartTime}"></td>
+<td class="text-center" th:text="${obj.scheEndTime}"></td>
+<td th:text="${obj.startTime}"></td>
+<td th:text="${obj.endTime}"></td>
+</span>
+<span sec:authorize="hasRole('ROLE_ADMIN')">
 <td class="text-center" th:text="${obj.scheStartTime}"></td>
 <td class="text-center" th:text="${obj.scheEndTime}"></td>
 <td th:text="${obj.startTime}"></td>

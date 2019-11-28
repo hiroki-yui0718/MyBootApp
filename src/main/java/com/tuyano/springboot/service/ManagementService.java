@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,15 +78,18 @@ public class ManagementService {
 	}
 	@Transactional
 	@Modifying
-	public void startUpdate(LocalTime str, LocalDateTime t3, LocalDateTime t4) {
+	public void startUpdate(LocalDateTime str, LocalDateTime t3, LocalDateTime t4) {
 		// TODO 自動生成されたメソッド・スタブ
-		entityManager.createQuery("update Suica set dayTime = :str where state = :state and date between :t3 and :t4 order by suica_id asc").setMaxResults(1).setParameter("state", "出勤").setParameter("str", str).setParameter("t3", t3).setParameter("t4", t4).executeUpdate();
-	}
+		long id = (long)entityManager.createQuery("select suica_id from Suica where state = :state and date between :t3 and :t4 order by suica_id").setParameter("state","出勤").setParameter("t3", t3).setParameter("t4", t4).setMaxResults(1).getSingleResult();
+		entityManager.createQuery("update Suica set date = :str where suica_id = :id").setParameter("str", str).setParameter("id",id).executeUpdate();
+
+		}
 	@Transactional
 	@Modifying
-	public void endUpdate(LocalTime str, LocalDateTime t3, LocalDateTime t4) {
+	public void endUpdate(LocalDateTime str, LocalDateTime t3, LocalDateTime t4) {
 		// TODO 自動生成されたメソッド・スタブ
-		entityManager.createQuery("update Suica set dayTime = :str where state = :state and date between :t3 and :t4 order by suica_id desc").setMaxResults(1).setParameter("state", "退勤").setParameter("str", str).setParameter("t3", t3).setParameter("t4", t4).executeUpdate();
+		long id = (long)entityManager.createQuery("select suica_id from Suica where state = :state and date between :t3 and :t4 order by suica_id desc").setParameter("state", "退勤").setParameter("t3", t3).setParameter("t4", t4).setMaxResults(1).getSingleResult();
+		entityManager.createQuery("update Suica set date = :str where suica_id = :id").setParameter("str", str).setParameter("id",id).executeUpdate();
 	}
 	
 }

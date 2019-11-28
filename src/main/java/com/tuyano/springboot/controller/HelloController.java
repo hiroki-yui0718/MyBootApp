@@ -133,7 +133,7 @@ public class HelloController {
 			User userDetail = (User)authentication.getPrincipal();
 			String name = userDetail.getUsername();
 			long id = service2.findId(name);
-			mav.addObject("id","\"/calendar/"+id+"/0\"");
+			mav.addObject("id","calendar/"+id+"/0");
 		}catch(NullPointerException e) {
 			mav.addObject("id","\"#\"");
 		}

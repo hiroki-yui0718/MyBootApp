@@ -28,6 +28,7 @@ import com.tuyano.springboot.model.Manager;
 import com.tuyano.springboot.model.Suica;
 import com.tuyano.springboot.repositories.ManagementRepository;
 import com.tuyano.springboot.repositories.ManagerRepository;
+import com.tuyano.springboot.repositories.SuicaRepository;
 import com.tuyano.springboot.service.ManagementService;
 import com.tuyano.springboot.service.ReservationUserDetailsService;
 
@@ -43,6 +44,8 @@ public class ManagementController {
 	ManagementRepository repository;
 	@Autowired
 	ManagerRepository repository2;
+	@Autowired
+	SuicaRepository repository3;
 
 	String[] week = {" ","日","月","火","水","木","金","土"};
 	private int startDay;
@@ -57,9 +60,9 @@ public class ManagementController {
 		String str = hour + ":" + min +":" + sec;
 		return str;
 	}
-	public LocalTime dateChange(String str) {
+	public LocalDateTime dateChange(int year,int date,int i,String str) {
 		String[] str2= str.split(":",0);
-		LocalTime t = LocalTime.of(Integer.parseInt(str2[0]),Integer.parseInt(str2[1]),Integer.parseInt(str2[2]));
+		LocalDateTime t = LocalDateTime.of(year,month,i,Integer.parseInt(str2[0]),Integer.parseInt(str2[1]),Integer.parseInt(str2[2]));
 		return t; 
 	}
 	public String monthTime(int sec) {
@@ -67,6 +70,13 @@ public class ManagementController {
 		int min = (sec%3600) / 60;
 		sec = sec % 60;
 		String str = hour + ":" + min +":" +sec; 
+		return str;
+	}
+	public LocalTime monthTime2(int sec) {
+		int hour = sec / 3600;
+		int min = (sec%3600) / 60;
+		sec = sec % 60;
+		LocalTime str = LocalTime.of(hour, min,sec); 
 		return str;
 	}
 	public int sumTime(LocalTime t) {
@@ -112,6 +122,7 @@ public class ManagementController {
 		setCal(num);
 		for(int i = 1;i <= lastDate;i++) {
 			Manager mana = new Manager();
+			Suica suica = new Suica();
 			LocalDate t = LocalDate.of(year,month,i);
 			LocalDateTime t2 = LocalDateTime.now();
 			Account account = service2.findAll(name);
@@ -126,9 +137,37 @@ public class ManagementController {
 			String str3 = request.getParameter("startTime" + i);
 			String str4 = request.getParameter("endTime" + i);
 			LocalDateTime t3 = LocalDateTime.of(year,month,i,0,0,0);
+
 			LocalDateTime t4 = LocalDateTime.of(year,month,i,23,59,59);
-			service.startUpdate(dateChange(str3),t3,t4);
-			service.endUpdate(dateChange(str4),t3,t4);
+			try {
+				if(!(str3.equals("")||str3 ==null)){
+					service.startUpdate(dateChange(year,month,i,str3),t3,t4);
+
+				}
+			}catch(NoResultException e) {
+				suica.setIdm(account.getIdm());
+				suica.setDate(dateChange(year,month,i,str3));
+				suica.setState("出勤");
+				suica.setDayTime(monthTime2(0));
+				suica.setMonthTime(monthTime(0));
+				suica.setAccount(account);
+				repository3.saveAndFlush(suica);
+			}
+			try {
+
+				if(!(str4.equals("")||str4 ==null)) {
+					service.endUpdate(dateChange(year,month,i,str4),t3,t4);
+				}
+
+			}catch(NoResultException e) {
+				suica.setIdm(account.getIdm());
+				suica.setDate(dateChange(year,month,i,str4));
+				suica.setState("退勤");
+				suica.setDayTime(monthTime2(0));
+				suica.setMonthTime(monthTime(0));
+				suica.setAccount(account);
+				repository3.saveAndFlush(suica);
+			}
 			User userDetail = (User)authentication.getPrincipal();
 			String str = userDetail.getUsername();
 			Account account2 = service2.findAll(str);
@@ -227,15 +266,19 @@ public class ManagementController {
 	public int diff2(String t1, String t2) {
 		// TODO 自動生成されたメソッド・スタブ
 		int sec;
-		if(!(t1.equals("")&&t2.equals(""))) {
-			String[] str = t1.split(":",0);
-			LocalTime t3 = LocalTime.of(Integer.parseInt(str[0]), Integer.parseInt(str[1]),0);
-			String[] str2 = t2.split(":",0);
-			LocalTime t4 = LocalTime.of(Integer.parseInt(str2[0]), Integer.parseInt(str2[1]),0);
-			Duration d = Duration.between(t3, t4);
-			sec = (int)d.toSeconds();
-			System.out.println(sec);
-		}else {
+		try{
+			if(!(t1.equals("")||t2.equals(""))) {
+				String[] str = t1.split(":",0);
+				LocalTime t3 = LocalTime.of(Integer.parseInt(str[0]), Integer.parseInt(str[1]),0);
+				String[] str2 = t2.split(":",0);
+				LocalTime t4 = LocalTime.of(Integer.parseInt(str2[0]), Integer.parseInt(str2[1]),0);
+				Duration d = Duration.between(t3, t4);
+				sec = (int)d.toSeconds();
+				System.out.println(sec);
+			}else {
+				sec = 0;
+			}
+		}catch(NullPointerException e) {
 			sec = 0;
 		}
 		return sec;
@@ -245,20 +288,20 @@ public class ManagementController {
 		String str1;
 		try {
 			if(!str2.equals("")) {
-			String[] str = str2.split(":",0);
-			LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
-			LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
-			Duration d = Duration.between(t2, t);
-			
-			if(d.toSeconds() <0) {
-				str1 = "-" + monthTime((int)-d.toSeconds());
-			}else {
-				str1 = monthTime((int)d.toSeconds());
-			}
+				String[] str = str2.split(":",0);
+				LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
+				LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
+				Duration d = Duration.between(t2, t);
+
+				if(d.toSeconds() <0) {
+					str1 = "-" + monthTime((int)-d.toSeconds());
+				}else {
+					str1 = monthTime((int)d.toSeconds());
+				}
 			}else {
 				str1 = null;
 			}
-			
+
 		}catch(NullPointerException e) {
 			str1 = null;
 		}
