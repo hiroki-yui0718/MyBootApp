@@ -44,7 +44,7 @@ public class IndexController {
 			String name = userDetail.getUsername();
 			long id = service3.findId(name);
 			mav.addObject("id","calendar/"+id+"/0");
-		}catch(NullPointerException e) {
+		}catch(NoResultException e) {
 			mav.addObject("id","\"#\"");
 		}
 

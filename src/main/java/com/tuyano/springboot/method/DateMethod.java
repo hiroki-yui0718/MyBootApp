@@ -43,34 +43,7 @@ public class DateMethod {
 		return sec;
 	}
 
-	public void setCal(int num) {
-		Calendar cal = Calendar.getInstance();
-		this.month  = cal.get(Calendar.MONTH) + 1+ num;
 
-		int i = 0;
-		while(true) {
-			if(month > 12) { //NEXT
-				this.month -= 12;
-				i++;
-			}if(month < 1){ //BACK
-				this.month += 12;
-				i--;
-			}else if(0 < month && 13 > month){
-				break;
-			}
-		}
-		this.year = cal.get(Calendar.YEAR) + i;
-
-		cal.clear();
-		// 月の初めの曜日を求めます。
-		cal.set(year, month - 1, 1);// 引数: 1月: 0, 2月: 1, ...
-		this.startDay = cal.get(Calendar.DAY_OF_WEEK);
-		//月末の日付を求めます。
-		cal.add(Calendar.MONTH, 1);
-		cal.add(Calendar.DATE, -1);
-		this.lastDate = cal.get(Calendar.DATE);
-
-	}
 	public String secToString(int sec) {
 		int hour = sec / 3600;
 		int min = (sec%3600) / 60;

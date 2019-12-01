@@ -23,7 +23,7 @@ public class AccountService {
 		return (String)entityManager.createQuery("select username from Account where id = :id").setParameter("id", id).getSingleResult();
 	}
 	public long findId(String username) {
-		return (long)entityManager.createQuery("select id from Account where username = :username").setParameter("username", username).getSingleResult();
+		return (long)entityManager.createQuery("select account_id from Account where username = :username").setParameter("username", username).getSingleResult();
 	}
 	@SuppressWarnings("unchecked")
 	public List<Account> findDataAll(){

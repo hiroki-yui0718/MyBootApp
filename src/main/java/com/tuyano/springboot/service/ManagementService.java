@@ -22,19 +22,13 @@ public class ManagementService {
 	@Autowired
 	EntityManager entityManager;
 	
-	@SuppressWarnings("unchecked")
-	public List<Management> getAll(String name,int year, int month,int startDay,int endDay) {
-		// TODO 自動生成されたメソッド・スタブ
-		String idm = getIdm(name);
-		return (List<Management>)entityManager.createQuery("from Management where idm = :idm").setParameter("idm", idm).getResultList(); 
-	}
 
 	public LocalTime findScheStartTime(String name, LocalDate t) {
 		return (LocalTime)entityManager.createQuery("select scheStartTime from Management where name = :name and date = :str order by management_id desc").setParameter("name", name).setParameter("str", t).setMaxResults(1).getSingleResult(); 
 	}
-	public LocalTime findScheEndTime(String name, LocalDate t) {
+	public LocalTime findScheEndTime(String name, LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ\
-		return (LocalTime)entityManager.createQuery("select scheEndTime from Management where name = :name and date = :str order by managemnt_id desc").setParameter("name", name).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+		return (LocalTime)entityManager.createQuery("select scheEndTime from Management where name = :name and date = :str order by management_id desc").setParameter("name", name).setParameter("str", d).setMaxResults(1).getSingleResult(); 
 	}
 
 

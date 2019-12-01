@@ -47,7 +47,7 @@ public class ServerController {
 			data.setDaySumTime(m.secToTime(0));
 		}else {
 			Data state = service.find(line);
-			LocalDate t2 = state.getDate();
+			LocalTime t2 = state.getTime();
 			Duration t = Duration.between(t2,t1);
 			int sec = (int)t.toSeconds();
 

@@ -37,10 +37,10 @@ public class Cal {
 	@Column
 	private LocalTime daySumTime;
 	
-	public void setCalendarId(long cal_id) {
+	public void setCalId(long cal_id) {
 		this.cal_id = cal_id;
 	}
-	public long getManageId() {
+	public long getCalId() {
 		return cal_id;
 	}
 	public void setIdm(String idm) {

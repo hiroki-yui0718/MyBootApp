@@ -42,7 +42,6 @@ public class DataService {
 	public long findState(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Data where idm = :idm and state = :state").setParameter("idm", idm).setParameter("state", "退勤").getSingleResult();
 	}
-	@SuppressWarnings("unchecked")
 	public LocalTime findDaySumTime(String name,LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ
 		return (LocalTime)entityManager.createQuery("select daySumTime from Data where username = :name and state = :state and date = :date order by data_id desc").setParameter("name", name).setParameter("state", "退勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
