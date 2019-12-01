@@ -16,27 +16,27 @@ import javax.persistence.Table;
 @Table(name="account")
 public class Account{
 	@OneToMany(mappedBy = "account")
-	private List<Manager> managers;
+	private List<Management> managers;
 	
-	public void setManagers(List<Manager> managers) {
+	public void setManagements(List<Management> managers) {
 		this.managers = managers;
 	}
-	public List<Manager> getManagers(){
+	public List<Management> getManagements(){
 		return managers;
 	}
 	@OneToMany(mappedBy = "account")
-	private List<Suica> suicas;
+	private List<Data> suicas;
 	
-	public void setSuicas(List<Suica> suicas) {
+	public void setSuicas(List<Data> suicas) {
 		this.suicas = suicas;
 	}
-	public List<Suica> getSuicas(){
+	public List<Data> getSuicas(){
 		return suicas;
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private long id;
+	private long account_id;
 	@Column
 	private String idm;
 	@Column
@@ -46,10 +46,10 @@ public class Account{
 	@Column
 	private String role;
 	public void setId(long id) {
-		this.id = id;
+		this.account_id = account_id;
 	}
 	public long getId() {
-		return id;
+		return account_id;
 	}
 	public void setIdm(String idm) {
 		this.idm = idm;

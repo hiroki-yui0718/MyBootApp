@@ -1,10 +1,16 @@
 package com.tuyano.springboot.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,94 +18,75 @@ import javax.persistence.Table;
 public class Management {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="manage_id")
-	private long manage_id;
 	@Column
-	private String idm;
+	private long management_id;
 	@Column
-	private int year;
+	private String name;
 	@Column
-	private String day;
+	private LocalDate date;
 	@Column
-	private String week;
+	private String monthSumTime;
 	@Column
-	private String scheStartTime;
+	private LocalTime scheStartTime;
 	@Column
-	private String scheEndTime;
+	private LocalTime scheEndTime;
 	@Column
-	private String startTime;
-	@Column
-	private String endTime;
-	@Column
-	private String time;
-	@Column
-	private String sumTime;
-	public void setManageId(long manage_id) {
-		this.manage_id = manage_id;
+	private LocalDateTime createdTime;
+	@ManyToOne
+	@JoinColumn(name="username")
+	private Account account;
+	public Management() {
+		super();
+		account =new Account();
 	}
-	public long getManageId() {
-		return manage_id;
+	public void setManagementId(long management_id) {
+		this.management_id = management_id;
 	}
-	public void setIdm(String idm) {
-		this.idm = idm;
+	public long getManagementId() {
+		return management_id;
 	}
-	public String getIdm() {
-		return idm;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public void setDay(String day) {
-		this.day = day;
+	public String getName() {
+		return name;
 	}
-	public String getDay() {
-		return day;
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
-	public void setWeek(String week) {
-		this.week = week;
+	public LocalDate getDate() {
+		return date;
 	}
-	public String getWeek() {
-		return week;
-	}
-	public void setScheStartTime(String scheStartTime) {
-		this.scheStartTime = scheStartTime;
-	}
-	public String getScheStartTime() {
+
+	public LocalTime getScheStringTime() {
 		return scheStartTime;
 	}
-	public String getScheEndTime() {
+	public void setScheStratTime(LocalTime scheStartTime) {
+		this.scheStartTime = scheStartTime;
+	}
+	public LocalTime getScheEndTime() {
 		return scheEndTime;
 	}
-	public void setScheEndTime(String shceEndTime) {
-		this.scheEndTime = shceEndTime;
+	public void setScheEndTime(LocalTime scheEndTime) {
+		this.scheEndTime = scheEndTime;
 	}
-	public String getStartTime() {
-		return startTime;
+	public String getMonthSumTime() {
+		return monthSumTime;
 	}
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
+	public void setMonthSumTime(String monthSumTime) {
+		this.monthSumTime = monthSumTime;
 	}
-	public String getEndTime() {
-		return endTime;
+	public LocalDateTime getCreatedTime() {
+		return createdTime;
 	}
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
+	public void setCreatedTime(LocalDateTime createdTime) {
+		this.createdTime = createdTime;
 	}
-	public String getTime() {
-		return time;
+	public Account getAccoun(){
+		return account;
 	}
-	public void setTime(String time) {
-		this.time = time;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
-	public String getSumTime() {
-		return sumTime;
-	}
-	public void setSumTime(String sumTime) {
-		this.sumTime = sumTime;
-	}
-	public void setYear(int year) {
-		// TODO 自動生成されたメソッド・スタブ
-		this.year =year;
-	}
-	public int getYear() {
-		// TODO 自動生成されたメソッド・スタブ
-		return year;
-	}
+	
 }

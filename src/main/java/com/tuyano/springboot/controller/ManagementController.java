@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tuyano.springboot.model.Account;
-import com.tuyano.springboot.model.Management;
-import com.tuyano.springboot.model.Manager;
-import com.tuyano.springboot.model.Suica;
+import com.tuyano.springboot.model.Data;
+import com.tuyano.springboot.repositories.AccountRepository;
+import com.tuyano.springboot.repositories.CalRepository;
 import com.tuyano.springboot.repositories.ManagementRepository;
-import com.tuyano.springboot.repositories.ManagerRepository;
-import com.tuyano.springboot.repositories.SuicaRepository;
+import com.tuyano.springboot.repositories.DataRepository;
+import com.tuyano.springboot.service.AccountService;
 import com.tuyano.springboot.service.ManagementService;
 import com.tuyano.springboot.service.ReservationUserDetailsService;
 
@@ -39,284 +39,21 @@ public class ManagementController {
 	ManagementService service;
 	@Autowired
 	ReservationUserDetailsService service2;
-
 	@Autowired
-	ManagementRepository repository;
+	AccountService service3;
 	@Autowired
-	ManagerRepository repository2;
-	@Autowired
-	SuicaRepository repository3;
+	AccountRepository repository;
 
-	String[] week = {" ","日","月","火","水","木","金","土"};
-	private int startDay;
-	private int lastDate;
-	private int year;
-	private int month;
-
-	public String date(LocalDateTime t) {
-		int hour = t.getHour();
-		int min = t.getMinute();
-		int sec = t.getSecond();
-		String str = hour + ":" + min +":" + sec;
-		return str;
-	}
-	public LocalDateTime dateChange(int year,int date,int i,String str) {
-		String[] str2= str.split(":",0);
-		LocalDateTime t = LocalDateTime.of(year,month,i,Integer.parseInt(str2[0]),Integer.parseInt(str2[1]),Integer.parseInt(str2[2]));
-		return t; 
-	}
-	public String monthTime(int sec) {
-		int hour = sec / 3600;
-		int min = (sec%3600) / 60;
-		sec = sec % 60;
-		String str = hour + ":" + min +":" +sec; 
-		return str;
-	}
-	public LocalTime monthTime2(int sec) {
-		int hour = sec / 3600;
-		int min = (sec%3600) / 60;
-		sec = sec % 60;
-		LocalTime str = LocalTime.of(hour, min,sec); 
-		return str;
-	}
-	public int sumTime(LocalTime t) {
-		int sec = t.getHour()* 3600;
-		sec += t.getMinute() * 60;
-		sec += t.getSecond();
-		return sec;
-	}
-
-	public void setCal(int num) {
-		Calendar cal = Calendar.getInstance();
-		this.month  = cal.get(Calendar.MONTH) + 1+ num;
-
-		int i = 0;
-		while(true) {
-			if(month > 12) { //NEXT
-				this.month -= 12;
-				i++;
-			}if(month < 1){ //BACK
-				this.month += 12;
-				i--;
-			}else if(0 < month && 13 > month){
-				break;
-			}
-		}
-		this.year = cal.get(Calendar.YEAR) + i;
-
-		cal.clear();
-		// 月の初めの曜日を求めます。
-		cal.set(year, month - 1, 1);// 引数: 1月: 0, 2月: 1, ...
-		this.startDay = cal.get(Calendar.DAY_OF_WEEK);
-		//月末の日付を求めます。
-		cal.add(Calendar.MONTH, 1);
-		cal.add(Calendar.DATE, -1);
-		this.lastDate = cal.get(Calendar.DATE);
-
-	}
-	@RequestMapping(value="/calendar/{id}",method=RequestMethod.POST)
-	public ModelAndView index(@PathVariable long id,ModelAndView mav,HttpServletRequest request,Authentication authentication){
-
-		String name = service.findName(id);
-		int num = Integer.parseInt(request.getParameter("date"));
-		setCal(num);
-		for(int i = 1;i <= lastDate;i++) {
-			Manager mana = new Manager();
-			Suica suica = new Suica();
-			LocalDate t = LocalDate.of(year,month,i);
-			LocalDateTime t2 = LocalDateTime.now();
-			Account account = service2.findAll(name);
-			mana.setAccount(account);
-			mana.setName(name);
-			mana.setDate(t);
-			String str1 = request.getParameter("scheStartTime" + i);
-			String str2 = request.getParameter("scheEndTime" + i);
-			mana.setScheStratTime(str1);
-			mana.setScheEndTime(str2);
-			mana.setCreatedTime(t2);
-			String str3 = request.getParameter("startTime" + i);
-			String str4 = request.getParameter("endTime" + i);
-			LocalDateTime t3 = LocalDateTime.of(year,month,i,0,0,0);
-
-			LocalDateTime t4 = LocalDateTime.of(year,month,i,23,59,59);
-			try {
-				if(!(str3.equals("")||str3 ==null)){
-					service.startUpdate(dateChange(year,month,i,str3),t3,t4);
-
-				}
-			}catch(NoResultException e) {
-				suica.setIdm(account.getIdm());
-				suica.setDate(dateChange(year,month,i,str3));
-				suica.setState("出勤");
-				suica.setDayTime(monthTime2(0));
-				suica.setMonthTime(monthTime(0));
-				suica.setAccount(account);
-				repository3.saveAndFlush(suica);
-			}
-			try {
-
-				if(!(str4.equals("")||str4 ==null)) {
-					service.endUpdate(dateChange(year,month,i,str4),t3,t4);
-				}
-
-			}catch(NoResultException e) {
-				suica.setIdm(account.getIdm());
-				suica.setDate(dateChange(year,month,i,str4));
-				suica.setState("退勤");
-				suica.setDayTime(monthTime2(0));
-				suica.setMonthTime(monthTime(0));
-				suica.setAccount(account);
-				repository3.saveAndFlush(suica);
-			}
-			User userDetail = (User)authentication.getPrincipal();
-			String str = userDetail.getUsername();
-			Account account2 = service2.findAll(str);
-			mana.setAccount(account2);
-			repository2.saveAndFlush(mana);
-		}
-		mav.setViewName("calendar");
-		mav = new ModelAndView("redirect:/calendar/{id}/" + num);
-		return mav;
-	}
-	@RequestMapping(value="/calendar/{id}/{date}",method=RequestMethod.GET)
-	public ModelAndView send(@PathVariable int date,@PathVariable long id,HttpServletRequest request,HttpSession session,ModelAndView mav,Authentication authentication){
-		String name = service.findName(id);
-		mav.addObject("date",date);
-		setCal(date);
-		//		xここに削除文
-		service.dropAll();
-		int j = startDay;
-		String scheSumTime =null;
-		int sumTime = 0;
-		for(int i = 1;i <= lastDate;i++) {
-			Management manage = new Management();
-			LocalDateTime t1 = LocalDateTime.of(year,month,i,0,0,0);
-			LocalDateTime t2= LocalDateTime.of(year,month,i,23,59,59);
-			LocalDate t3 = LocalDate.of(year,month,i);
-			String str = month + "月"+ i +"日";
-			manage.setIdm(service.getIdm(name));
-			manage.setYear(year);
-			manage.setDay(str);
-
-			manage.setWeek(week[j]);
-			j++;
-			if(j == 8)j = 1;
-			LocalDateTime t4 = null;
-			String str2 = null;
-			String str1 = null;
-			try{
-				str1 = service.findScheStartTime(name,t3);
-				manage.setScheStartTime(str1);
-
-			}catch(NoResultException e) {
-				manage.setScheStartTime(null);
-			}
-			try{
-				str2 = service.findScheEndTime(name,t3);
-				manage.setScheEndTime(str2);
-			}catch(NoResultException e) {
-				manage.setScheEndTime(null);
-			}
-			try{
-				manage.setStartTime(date(service.findStart(name,t1,t2)));
-			}catch(NoResultException e) {
-				manage.setStartTime(null);
-			}
-			try{
-				t4 = service.findEnd(name,t1,t2);
-				manage.setEndTime(date(t4));
-			}catch(NoResultException e) {
-				manage.setEndTime(null);
-			}
-			try{
-				String str3 = diff(t4,str2);
-				manage.setTime(str3);
-			}catch(NoResultException e) {
-				manage.setTime(null);
-			}
-			try{
-				List<LocalTime> m = service.findSumTime(name,t1,t2);
-				int sum = 0;
-				for(LocalTime t:m) {
-					sum += sumTime(t);
-				}
-				manage.setSumTime(monthTime(sum));
-			}catch(NoResultException e) {
-				manage.setSumTime(null);
-			}
-			sumTime += diff2(str1,str2);
-
-
-			repository.saveAndFlush(manage);
-		}
-		scheSumTime = monthTime(sumTime);
-		mav.addObject("next",date+1);
-		mav.addObject("back",date-1);
-		mav.addObject("name",year + "年　　    "+name +"さんの勤怠管理表です");
-		if(scheSumTime == null) {
-			mav.addObject("sche","勤務予定時間は未入力です。");
-		}else {
-			mav.addObject("sche","勤務予定時間は" + scheSumTime + "です。");
-		}
-		mav.setViewName("calendar");
-		mav.addObject("id",id);
-		mav.addObject("datalist",service.getAll(name,year,month,startDay,lastDate));
-		return mav;
-	}
-	public int diff2(String t1, String t2) {
-		// TODO 自動生成されたメソッド・スタブ
-		int sec;
-		try{
-			if(!(t1.equals("")||t2.equals(""))) {
-				String[] str = t1.split(":",0);
-				LocalTime t3 = LocalTime.of(Integer.parseInt(str[0]), Integer.parseInt(str[1]),0);
-				String[] str2 = t2.split(":",0);
-				LocalTime t4 = LocalTime.of(Integer.parseInt(str2[0]), Integer.parseInt(str2[1]),0);
-				Duration d = Duration.between(t3, t4);
-				sec = (int)d.toSeconds();
-				System.out.println(sec);
-			}else {
-				sec = 0;
-			}
-		}catch(NullPointerException e) {
-			sec = 0;
-		}
-		return sec;
-	}
-	public String diff(LocalDateTime t4, String str2) {
-		// TODO 自動生成されたメソッド・スタブ
-		String str1;
-		try {
-			if(!str2.equals("")) {
-				String[] str = str2.split(":",0);
-				LocalTime t = LocalTime.of(t4.getHour(),t4.getMinute(),t4.getMinute()); 
-				LocalTime t2 = LocalTime.of(Integer.valueOf(str[0]), Integer.valueOf(str[1]),0);
-				Duration d = Duration.between(t2, t);
-
-				if(d.toSeconds() <0) {
-					str1 = "-" + monthTime((int)-d.toSeconds());
-				}else {
-					str1 = monthTime((int)d.toSeconds());
-				}
-			}else {
-				str1 = null;
-			}
-
-		}catch(NullPointerException e) {
-			str1 = null;
-		}
-		return str1;
-	}
 	@RequestMapping(value = "/management", method = RequestMethod.GET)
 	public ModelAndView show(ModelAndView mav) {
-		List<Account> list = service.findDataAll();
+		List<Account> list = service3.findDataAll();
 		mav.addObject("datalist",list);
 		mav.setViewName("management");
 		return mav;
 	}
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public ModelAndView get(ModelAndView mav) {
-		List<Account> list = service.findDataAll();
+		List<Account> list = service3.findDataAll();
 		mav.addObject("datalist",list);
 		mav.setViewName("admin");
 		return mav;

@@ -39,9 +39,7 @@ public class ReservationUserDetailsService  implements UserDetailsService{
 	public void RoleUpdate(long id, String role) {
 		entityManager.createQuery("UPDATE Account set role = :role where id = :id").setParameter("role",role).setParameter("id",id).executeUpdate();
 	}
-	public Account findAll(String username) {
-		return (Account)entityManager.createQuery("from Account where username = :username").setParameter("username", username).getSingleResult();
-	}
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	public enum ExampleRole {

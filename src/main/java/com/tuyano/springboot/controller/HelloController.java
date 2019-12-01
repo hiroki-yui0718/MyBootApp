@@ -30,13 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tuyano.springboot.MyDataDaoImpl;
-import com.tuyano.springboot.model.Manager;
 import com.tuyano.springboot.model.MyData;
-import com.tuyano.springboot.model.Suica;
+import com.tuyano.springboot.model.Data;
 import com.tuyano.springboot.repositories.MyDataRepository;
 import com.tuyano.springboot.service.ManagementService;
 import com.tuyano.springboot.service.MyDataService;
-import com.tuyano.springboot.service.SuicaService;
+import com.tuyano.springboot.service.DataService;
 
 @Controller
 public class HelloController {
@@ -44,10 +43,6 @@ public class HelloController {
 	@Autowired
 	MyDataRepository repository;
 
-	@Autowired
-	SuicaService service2;
-	@Autowired
-	ManagementService service3;
 	@PersistenceContext
 	EntityManager entityManager; //
 
@@ -108,46 +103,7 @@ public class HelloController {
 		mav.addObject("falseVal","Odd number...");
 		return mav;
 	}
-	@RequestMapping("/")
-	public ModelAndView index(ModelAndView mav,HttpServletRequest request,Authentication authentication) {
-		mav.setViewName("index");
-		mav.addObject("msg","message 1<hr>message 2<br>message 3");
-		//	DataObject obj = new DataObject(123,"hanako","hanako@flower");
-		//	mav.addObject("object",obj);
-		//	ArrayList<String[]> data = new ArrayList<String[]>();
-		//	data.add(new String[] {"taro","taro@yamada","080-999-999"});
-		//	data.add(new String[] {"hanako","hanako@flower","080-888-888"});
-		//	data.add(new String[] {"sachiko","sachiko@happy","090-999-999"});
-		ArrayList<DataObject> data = new ArrayList<DataObject>();
-		data.add(new DataObject (0,"taro","taro@yamada"));
-		data.add(new DataObject (1,"hanako","hanako@flower"));
-		data.add(new DataObject(2,"sachiko","sachiko@happy"));
-		try {
-			List<Suica> list = service2.getAll();
-			mav.addObject("datalist",list);
 
-		}catch(NullPointerException e) {
-			e.printStackTrace();
-		}
-		try {
-			User userDetail = (User)authentication.getPrincipal();
-			String name = userDetail.getUsername();
-			long id = service2.findId(name);
-			mav.addObject("id","calendar/"+id+"/0");
-		}catch(NullPointerException e) {
-			mav.addObject("id","\"#\"");
-		}
-
-
-		try{
-			Manager manager = service3.getLog();
-			mav.addObject("data",manager);
-		}catch(NoResultException e) {
-			e.printStackTrace();
-			mav.addObject("data",null);
-		}
-		return mav;
-	}
 	@RequestMapping(value="/",method=RequestMethod.POST)
 	public ModelAndView send(ModelAndView mav){ //メソッド名は適当
 		mav.setViewName("index");
