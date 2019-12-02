@@ -45,17 +45,14 @@ public class DataService {
 
 	@Transactional
 	@Modifying
-	public void startUpdate(LocalTime t, LocalDate d) {
+	public void startUpdate(long id, LocalTime t, LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ
-		long id = (long)entityManager.createQuery("select data_id from Data where state = :state and date = :date order by data_id").setParameter("state","出勤").setParameter("date", d).setMaxResults(1).getSingleResult();
 		entityManager.createQuery("update Data set time = :time where data_id = :id").setParameter("time", t).setParameter("id",id).executeUpdate();
-
 		}
 	@Transactional
 	@Modifying
-	public void endUpdate(LocalTime t, LocalDate d) {
+	public void endUpdate(long id, LocalTime t, LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ
-		long id = (long)entityManager.createQuery("select data_id from Data where state = :state and date = :date order by data_id").setParameter("state","退勤").setParameter("date", d).setMaxResults(1).getSingleResult();
 		entityManager.createQuery("update Data set time = :time where data_id = :id").setParameter("time", t).setParameter("id",id).executeUpdate();
 	}
 	public LocalTime findSumDayTime(String line) {
@@ -77,6 +74,16 @@ public class DataService {
 		// TODO 自動生成されたメソッド・スタブ
 		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
 		return (LocalTime)entityManager.createQuery("select daySumTime from Data where account_id = :id and state = :state and date = :date order by data_id desc").setParameter("id", id).setParameter("state", "退勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
+
+	}
+	public long findStartId(LocalDate d) {
+		// TODO 自動生成されたメソッド・スタブ
+		return (long)entityManager.createQuery("select data_id from Data where state = :state and date = :date").setParameter("date", d).setParameter("state", "出勤").getSingleResult();
+
+	}
+	public long findEndId(LocalDate d) {
+		// TODO 自動生成されたメソッド・スタブ
+		return (long)entityManager.createQuery("select data_id from Data where state = :state and date = :date").setParameter("date", d).setParameter("state", "退勤").getSingleResult();
 
 	}
 

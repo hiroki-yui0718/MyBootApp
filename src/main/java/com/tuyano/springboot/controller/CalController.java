@@ -58,14 +58,15 @@ public class CalController {
 	CalRepository repository;
 	@Autowired
 	ManagementRepository repository2;
-
-
+	@Autowired
+	DataRepository repository3;
 
 	@RequestMapping(value="/calendar/{id}/{date}",method=RequestMethod.GET)
 	public ModelAndView send(@PathVariable int date,@PathVariable long id,HttpServletRequest request,HttpSession session,ModelAndView mav,Authentication authentication){
 		String name = service3.findName(id);
-		mav.addObject("date",date);
 		setCal(date);
+		mav.addObject("date",date);
+		
 		//		xここに削除文
 		service4.dropAll();
 		int j = startDay;
@@ -77,7 +78,6 @@ public class CalController {
 			String str = month + "月"+ i +"日";
 			cal.setIdm(service4.getIdm(name));
 			cal.setYear(year);
-			System.out.println(str);
 			cal.setDay(str);
 
 			cal.setWeek(week[j]);
@@ -113,7 +113,7 @@ public class CalController {
 				cal.setEndTime(null);
 			}
 			try{
-				LocalTime t4 = m.TimeNoDiff(t1,t2);
+				LocalTime t4 = m.TimeNoDiff(t2,t1);
 				cal.setOverTime(t4);
 			}catch(NoResultException e) {
 				cal.setOverTime(null);
@@ -147,8 +147,7 @@ public class CalController {
 		}
 		mav.setViewName("calendar");
 		mav.addObject("id",id);
-		int num = startDay;
-		mav.addObject("datalist",service4.getAll(name,year,num));
+		mav.addObject("datalist",service4.getAll(name,year,month));
 		return mav;
 	}
 	@RequestMapping(value="/calendar/{id}",method=RequestMethod.POST)
@@ -159,75 +158,91 @@ public class CalController {
 		setCal(num);
 		for(int i = 1;i <= lastDate;i++) {
 			Management management = new Management();
+			Data data = new Data();
 			LocalDate d = LocalDate.of(year,month,i);
 			LocalDateTime t2 = LocalDateTime.now();
 			User userDetail = (User)authentication.getPrincipal();
 			String str = userDetail.getUsername();
 			Account account = service3.findAll(str);
-			
+
 			try {
-				long m_id =service4.getId(name);
+				long m_id =service.getId(name,d);
 				//xIDあり→UpDate
 				try {
 					String str1 = request.getParameter("scheStartTime" + i);
-					if(!(str1.equals("")||str1 ==null)){
-						service4.scheStartUpdate(m_id,m.stringToTime(str1));
-					}
+					service.scheStartUpdate(m_id,m.stringToTime(str1));
 				}catch(NullPointerException e) {
 					e.printStackTrace();
+				}catch(NumberFormatException e) {
+					e.printStackTrace();
 				}
-				
-				
 				try {
 					String str2 = request.getParameter("scheEndTime" + i);
-					if(!(str2.equals("")||str2 ==null)){
-						service4.scheEndUpdate(m_id,m.stringToTime(str2));
-					}
+					System.out.println(str2);
+					service.scheEndUpdate(m_id,m.stringToTime(str2));
 				}catch(NullPointerException e) {
 					e.printStackTrace();
+				}catch(NumberFormatException e) {
+					e.printStackTrace();
 				}
+				System.out.println(0);
 			}catch(NoResultException e) {
 				//xIDなし
-					String str1 = request.getParameter("scheStartTime" + i);
-					String str2 = request.getParameter("scheEndTime" + i);
-					if(!(str1.equals(""))&&str1 !=null&&!(str2.equals(""))&&str2 !=null){
-						management.setScheStratTime(m.stringToTime(str1));
-						management.setScheEndTime(m.stringToTime(str2));
-					}else if(!(str1.equals("")&&str1 ==null)){
-						management.setScheStratTime(m.stringToTime(str1));
-						management.setScheEndTime(null);
-					}else{
-						management.setScheStratTime(null);
-						management.setScheEndTime(m.stringToTime(str2));
-
-					}
-					management.setName(name);
-					management.setDate(d);
-					management.setMonthSumTime(null);
-					management.setCreatedTime(t2);
-					management.setAccount(account);
-					repository2.saveAndFlush(management);
+				System.out.println(1);
+				try{
+					LocalTime t1 = m.stringToTime(request.getParameter("scheStartTime" + i));
+					management.setScheStartTime(t1);
+				}catch(NumberFormatException ee) {
+					management.setScheStartTime(null);
+				}
+				try{
+					LocalTime t3 = m.stringToTime(request.getParameter("scheStartTime" + i));
+					management.setScheEndTime(t3);
+				}catch(NumberFormatException ee) {
+					management.setScheEndTime(null);
+				}
+				management.setName(name);
+				management.setDate(d);
+				management.setMonthSumTime(null);
+				management.setCreatedTime(t2);
+				management.setAccount(account);
+				repository2.saveAndFlush(management);
+			}
+			LocalTime t3 = null;
+			LocalTime t4= null;
+			try {
+				long d_id = service5.findStartId(d);
+				try {
+					t3 = m.stringToTime(request.getParameter("startTime" + i));
+					service5.startUpdate(d_id,t3,d);
+				}catch(NumberFormatException ee) {
+					ee.printStackTrace();
+				}
+			}catch(NoResultException e) {
+				data.setIdm(account.getIdm());
+				data.setDate(d);
+				data.setTime(t3);
+				data.setState("出勤");
+				data.setDaySumTime(m.secToTime(0));
+				data.setAccount(account);
+				repository3.saveAndFlush(data);
 			}
 			try {
-				String str3 = request.getParameter("startTime" + i);
-
-				if(!(str3.equals("")||str3 ==null)){
-					LocalTime t3 = m.stringToTime(str3);
-					service5.startUpdate(t3,d);
+				long d_id = service5.findEndId(d);
+				try{
+					t4 = m.stringToTime(request.getParameter("endTime" + i));
+					service5.endUpdate(d_id,t4,d);
+				}catch(NumberFormatException ee) {
+					ee.printStackTrace();
 				}
-			}catch(NullPointerException e) {
-				e.printStackTrace();
-			}catch(NoResultException e){
-				e.printStackTrace();
-			}
-			String str4 = request.getParameter("endTime" + i);
-			try {if(!(str4.equals("")||str4==null)) {
-				LocalTime t4 = m.stringToTime(str4);
-				service5.endUpdate(t4,d);}
-			}catch(NullPointerException e) {
-				e.printStackTrace();
-			}catch(NoResultException e){
-				e.printStackTrace();
+			}catch(NoResultException e) {
+				data.setIdm(account.getIdm());
+				data.setDate(d);
+				data.setTime(t4);
+				data.setState("退勤");
+				data.setDaySumTime(null);
+				data.setAccount(account);
+				repository3.saveAndFlush(data);
 			}
 
 		}

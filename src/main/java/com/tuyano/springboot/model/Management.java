@@ -58,10 +58,10 @@ public class Management {
 		return date;
 	}
 
-	public LocalTime getScheStringTime() {
+	public LocalTime getScheStartTime() {
 		return scheStartTime;
 	}
-	public void setScheStratTime(LocalTime scheStartTime) {
+	public void setScheStartTime(LocalTime scheStartTime) {
 		this.scheStartTime = scheStartTime;
 	}
 	public LocalTime getScheEndTime() {

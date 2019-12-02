@@ -10,7 +10,7 @@ public class DateMethod {
 
 	public LocalTime stringToTime(String str) {
 		String[] ary = str.split(":");
-		LocalTime t = LocalTime.of(Integer.valueOf(ary[0]),Integer.valueOf(ary[1]),Integer.valueOf(ary[2])); 
+		LocalTime t = LocalTime.of(Integer.valueOf(ary[0]),Integer.valueOf(ary[1]),0); 
 		return t;
 	}
 	public String dateTimeToString(LocalDateTime t) {

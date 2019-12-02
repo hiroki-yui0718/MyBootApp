@@ -33,10 +33,10 @@
 <td th:text="${obj.week}"></td>
 
 <span sec:authorize="hasRole('ROLE_MANAGER')">
-<td class="text-center"><input type="text" th:name="|scheStartTime${obj2.count}|" th:value="${obj.scheStartTime}" size="5" maxlength="5"></td>
-<td><input type="text" th:name="|scheEndTime${obj2.count}|" th:value="${obj.scheEndTime}" size="5" maxlength="5"></td>
-<td><input type="text" th:name="|startTime${obj2.count}|" th:value="${obj.startTime}"></td>
-<td><input type="text" th:name="|endTime${obj2.count}|" th:value="${obj.endTime}"></td>
+<td class="text-center"><input type="text" th:name="|scheStartTime${obj2.count}|" th:value="${obj.scheStartTime}" size="8" maxlength="8"></td>
+<td><input type="text" th:name="|scheEndTime${obj2.count}|" th:value="${obj.scheEndTime}" size="8" maxlength="8"></td>
+<td><input type="text" th:name="|startTime${obj2.count}|" th:value="${obj.startTime}" size="8" maxlength="8"></td>
+<td><input type="text" th:name="|endTime${obj2.count}|" th:value="${obj.endTime}" size="8" maxlength="8"></td>
 </span>
 
 <span sec:authorize="hasRole('ROLE_USER')">

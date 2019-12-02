@@ -38,7 +38,23 @@ public class ManagementService {
 		// TODO 自動生成されたメソッド・スタブ
 		return (Management)entityManager.createQuery("from Management order by management_id desc").setMaxResults(1).getSingleResult();
 	}
+	public long getId(String name, LocalDate d) {
+		// TODO 自動生成されたメソッド・スタブ
+		return (long)entityManager.createQuery("select management_id from Management where name = :name and date = :date").setParameter("date", d).setParameter("name", name).getSingleResult();
+	}
+	@Transactional
+	@Modifying
+	public void scheStartUpdate(long id, LocalTime t) {
+		// TODO 自動生成されたメソッド・スタブ
+		entityManager.createQuery("Update Management set scheStartTime = :t where management_id = :id").setParameter("t", t).setParameter("id", id).executeUpdate();
+	}
+	@Transactional
+	@Modifying
+	public void scheEndUpdate(long id, LocalTime t) {
+		// TODO 自動生成されたメソッド・スタブ
+		entityManager.createQuery("Update Management set scheEndTime = :t where management_id = :id").setParameter("t", t).setParameter("id", id).executeUpdate();
 
+	}
 
 	
 }
