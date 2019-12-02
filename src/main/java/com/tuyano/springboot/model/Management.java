@@ -33,7 +33,7 @@ public class Management {
 	@Column
 	private LocalDateTime createdTime;
 	@ManyToOne
-	@JoinColumn(name="username")
+	@JoinColumn(name="account_id")
 	private Account account;
 	public Management() {
 		super();

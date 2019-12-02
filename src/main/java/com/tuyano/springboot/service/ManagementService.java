@@ -24,11 +24,13 @@ public class ManagementService {
 	
 
 	public LocalTime findScheStartTime(String name, LocalDate t) {
-		return (LocalTime)entityManager.createQuery("select scheStartTime from Management where name = :name and date = :str order by management_id desc").setParameter("name", name).setParameter("str", t).setMaxResults(1).getSingleResult(); 
+		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (LocalTime)entityManager.createQuery("select scheStartTime from Management where account_id = :id and date = :str order by management_id desc").setParameter("id", id).setParameter("str", t).setMaxResults(1).getSingleResult(); 
 	}
 	public LocalTime findScheEndTime(String name, LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ\
-		return (LocalTime)entityManager.createQuery("select scheEndTime from Management where name = :name and date = :str order by management_id desc").setParameter("name", name).setParameter("str", d).setMaxResults(1).getSingleResult(); 
+		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (LocalTime)entityManager.createQuery("select scheEndTime from Management where account_id = :id and date = :str order by management_id desc").setParameter("id", id).setParameter("str", d).setMaxResults(1).getSingleResult(); 
 	}
 
 
@@ -36,9 +38,7 @@ public class ManagementService {
 		// TODO 自動生成されたメソッド・スタブ
 		return (Management)entityManager.createQuery("from Management order by management_id desc").setMaxResults(1).getSingleResult();
 	}
-	public String getIdm(String name) {
-		return (String)entityManager.createQuery("select idm from Account where username = :name").setParameter("name", name).getSingleResult();
-	}
+
 
 	
 }

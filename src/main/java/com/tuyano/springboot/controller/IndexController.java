@@ -46,6 +46,8 @@ public class IndexController {
 			mav.addObject("id","calendar/"+id+"/0");
 		}catch(NoResultException e) {
 			mav.addObject("id","\"#\"");
+		}catch(NullPointerException e){
+			mav.addObject("id","\"#\"");
 		}
 
 

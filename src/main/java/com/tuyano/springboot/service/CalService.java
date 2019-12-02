@@ -28,9 +28,9 @@ public class CalService {
 		return (String)entityManager.createQuery("select idm from Account where username = :name").setParameter("name", name).getSingleResult();
 	}
 	@SuppressWarnings("unchecked")
-	public List<Cal> getAll(String name,int year, String day1, String day2) {
+	public List<Cal> getAll(String name,int year, int day) {
 		// TODO 自動生成されたメソッド・スタブ
 		String idm = getIdm(name);
-		return (List<Cal>)entityManager.createQuery("from Cal where idm = :idm and year = :year and  day between :day1 and :day2 ").setParameter("idm", idm).setParameter("year", year).setParameter("day1", day1).setParameter("day2", day2).getResultList(); 
+		return (List<Cal>)entityManager.createQuery("from Cal where idm = :idm and year = :year and  day LIKE :day ").setParameter("idm", idm).setParameter("year", year).setParameter("day", day + "%").getResultList(); 
 	}
 }

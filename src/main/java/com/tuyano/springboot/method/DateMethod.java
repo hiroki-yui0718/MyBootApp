@@ -6,11 +6,7 @@ import java.time.LocalTime;
 import java.util.Calendar;
 
 public class DateMethod {
-	String[] week = {" ","日","月","火","水","木","金","土"};
-	private int startDay;
-	private int lastDate;
-	private int year;
-	private int month;
+
 
 	public LocalTime stringToTime(String str) {
 		String[] ary = str.split(":");
@@ -24,7 +20,7 @@ public class DateMethod {
 		String str = hour + ":" + min +":" + sec;
 		return str;
 	}
-	public LocalDateTime setToDateTime(int year,int date,int i,String str) {
+	public LocalDateTime setToDateTime(int year,int month,int i,String str) {
 		String[] str2= str.split(":",0);
 		LocalDateTime t = LocalDateTime.of(year,month,i,Integer.parseInt(str2[0]),Integer.parseInt(str2[1]),Integer.parseInt(str2[2]));
 		return t; 
@@ -37,9 +33,15 @@ public class DateMethod {
 		return str;
 	}
 	public int timeToSec(LocalTime t) {
-		int sec = t.getHour()* 3600;
+		int sec;
+		if(!(t ==null || t.equals(""))) {
+		sec = t.getHour()* 3600;
 		sec += t.getMinute() * 60;
 		sec += t.getSecond();
+		}else {
+		sec = 0;
+		}
+		
 		return sec;
 	}
 

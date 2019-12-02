@@ -42,11 +42,7 @@ public class DataService {
 	public long findState(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Data where idm = :idm and state = :state").setParameter("idm", idm).setParameter("state", "退勤").getSingleResult();
 	}
-	public LocalTime findDaySumTime(String name,LocalDate d) {
-		// TODO 自動生成されたメソッド・スタブ
-		return (LocalTime)entityManager.createQuery("select daySumTime from Data where username = :name and state = :state and date = :date order by data_id desc").setParameter("name", name).setParameter("state", "退勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
 
-	}
 	@Transactional
 	@Modifying
 	public void startUpdate(LocalTime t, LocalDate d) {
@@ -68,12 +64,20 @@ public class DataService {
 	}
 	public LocalTime findStart(String name,LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ
-		return (LocalTime)entityManager.createQuery("select time from Data where username = :name and state = :state and date = :date order by data_id").setParameter("name", name).setParameter("state", "出勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
+		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (LocalTime)entityManager.createQuery("select time from Data where account_id = :id and state = :state and date = :date order by data_id").setParameter("id", id).setParameter("state", "出勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
 
 	}
 	public LocalTime findEnd(String name, LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ
-		return (LocalTime)entityManager.createQuery("select time from Data where username = :name and state = :state and date = :date order by data_id desc").setParameter("name", name).setParameter("state", "退勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
+		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (LocalTime)entityManager.createQuery("select time from Data where account_id = :id and state = :state and date = :date order by data_id desc").setParameter("id", id).setParameter("state", "退勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
+	}
+	public LocalTime findDaySumTime(String name,LocalDate d) {
+		// TODO 自動生成されたメソッド・スタブ
+		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (LocalTime)entityManager.createQuery("select daySumTime from Data where account_id = :id and state = :state and date = :date order by data_id desc").setParameter("id", id).setParameter("state", "退勤").setParameter("date", d).setMaxResults(1).getSingleResult(); 
+
 	}
 
 }

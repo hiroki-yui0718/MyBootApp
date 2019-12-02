@@ -59,33 +59,7 @@ public class CalController {
 	@Autowired
 	ManagementRepository repository2;
 	
-	public void setCal(int num) {
-		Calendar cal = Calendar.getInstance();
-		this.month  = cal.get(Calendar.MONTH) + 1+ num;
 
-		int i = 0;
-		while(true) {
-			if(month > 12) { //NEXT
-				this.month -= 12;
-				i++;
-			}if(month < 1){ //BACK
-				this.month += 12;
-				i--;
-			}else if(0 < month && 13 > month){
-				break;
-			}
-		}
-		this.year = cal.get(Calendar.YEAR) + i;
-
-		cal.clear();
-		cal.set(year, month - 1, 1);
-		this.startDay = cal.get(Calendar.DAY_OF_WEEK);
-
-		cal.add(Calendar.MONTH, 1);
-		cal.add(Calendar.DATE, -1);
-		this.lastDate = cal.get(Calendar.DATE);
-
-	}
 	
 	@RequestMapping(value="/calendar/{id}/{date}",method=RequestMethod.GET)
 	public ModelAndView send(@PathVariable int date,@PathVariable long id,HttpServletRequest request,HttpSession session,ModelAndView mav,Authentication authentication){
@@ -99,7 +73,7 @@ public class CalController {
 		int sumTime2 = 0;
 		for(int i = 1;i <= lastDate;i++) {
 			Cal cal = new Cal();
-			LocalDate t3 = LocalDate.of(year,month,i);
+			LocalDate d = LocalDate.of(year,month,i);
 			String str = month + "月"+ i +"日";
 			cal.setIdm(service4.getIdm(name));
 			cal.setYear(year);
@@ -114,26 +88,26 @@ public class CalController {
 			LocalTime t5 =null;
 			LocalTime t6 =null;
 			try{
-				t5 = service.findScheStartTime(name,t3);
+				t5 = service.findScheStartTime(name,d);
 				cal.setScheStartTime(t5);
 
 			}catch(NoResultException e) {
 				cal.setScheStartTime(null);
 			}
 			try{
-				t1 = service.findScheEndTime(name,t3);
+				t1 = service.findScheEndTime(name,d);
 				cal.setScheEndTime(t1);
 			}catch(NoResultException e) {
 				cal.setScheEndTime(null);
 			}
 			try{
-				LocalTime t7 = service5.findStart(name,t3);
+				LocalTime t7 = service5.findStart(name,d);
 				cal.setStartTime(t7);
 			}catch(NoResultException e) {
 				cal.setStartTime(null);
 			}
 			try{
-				t2 = service5.findEnd(name,t3);
+				t2 = service5.findEnd(name,d);
 				cal.setEndTime(t2);
 			}catch(NoResultException e) {
 				cal.setEndTime(null);
@@ -145,14 +119,15 @@ public class CalController {
 				cal.setOverTime(null);
 			}
 			try{
-				t6 = service5.findDaySumTime(name,t3);
+				t6 = service5.findDaySumTime(name,d);
 				cal.setDaySumTime(t6);
 			}catch(NoResultException e) {
 				cal.setDaySumTime(null);
 			}
+				
 			sumTime += m.TimeToSecDiff(t5,t1);
 			sumTime2 += m.timeToSec(t6);
-
+			
 			repository.saveAndFlush(cal);
 		}
 		String scheSumTime = m.secToString(sumTime);
@@ -172,9 +147,8 @@ public class CalController {
 		}
 		mav.setViewName("calendar");
 		mav.addObject("id",id);
-		String str1 = startDay + "月1日"; 
-		String str2 = startDay + "月"+ lastDate +"日";
-		mav.addObject("datalist",service4.getAll(name,year,str1,str2));
+		int num = startDay;
+		mav.addObject("datalist",service4.getAll(name,year,num));
 		return mav;
 	}
 	@RequestMapping(value="/calendar/{id}",method=RequestMethod.POST)
@@ -218,6 +192,33 @@ public class CalController {
 		mav.setViewName("calendar");
 		mav = new ModelAndView("redirect:/calendar/{id}/" + num);
 		return mav;
+	}
+	public void setCal(int num) {
+		Calendar cal = Calendar.getInstance();
+		this.month  = cal.get(Calendar.MONTH) + 1+ num;
+
+		int i = 0;
+		while(true) {
+			if(month > 12) { //NEXT
+				this.month -= 12;
+				i++;
+			}if(month < 1){ //BACK
+				this.month += 12;
+				i--;
+			}else if(0 < month && 13 > month){
+				break;
+			}
+		}
+		this.year = cal.get(Calendar.YEAR) + i;
+
+		cal.clear();
+		cal.set(year, month - 1, 1);
+		this.startDay = (cal.get(Calendar.DAY_OF_WEEK));
+
+		cal.add(Calendar.MONTH, 1);
+		cal.add(Calendar.DATE, -1);
+		this.lastDate = (cal.get(Calendar.DATE));
+
 	}
 
 }

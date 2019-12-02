@@ -32,7 +32,7 @@ public class Data {
 	@Column
 	private LocalTime daySumTime;
 	@ManyToOne
-	@JoinColumn(name="username")
+	@JoinColumn(name="account_id")
 	private Account account;
 	
 	public Data() {
