@@ -58,9 +58,9 @@ public class CalController {
 	CalRepository repository;
 	@Autowired
 	ManagementRepository repository2;
-	
 
-	
+
+
 	@RequestMapping(value="/calendar/{id}/{date}",method=RequestMethod.GET)
 	public ModelAndView send(@PathVariable int date,@PathVariable long id,HttpServletRequest request,HttpSession session,ModelAndView mav,Authentication authentication){
 		String name = service3.findName(id);
@@ -124,10 +124,10 @@ public class CalController {
 			}catch(NoResultException e) {
 				cal.setDaySumTime(null);
 			}
-				
+
 			sumTime += m.TimeToSecDiff(t5,t1);
 			sumTime2 += m.timeToSec(t6);
-			
+
 			repository.saveAndFlush(cal);
 		}
 		String scheSumTime = m.secToString(sumTime);
@@ -164,30 +164,72 @@ public class CalController {
 			User userDetail = (User)authentication.getPrincipal();
 			String str = userDetail.getUsername();
 			Account account = service3.findAll(str);
-
-			management.setName(name);
-			management.setDate(d);
-			management.setScheStratTime(m.stringToTime(request.getParameter("scheStartTime" + i)));
-			management.setScheEndTime(m.stringToTime(request.getParameter("scheEndTime" + i)));
-			management.setCreatedTime(t2);
-			management.setAccount(account);
-			repository2.saveAndFlush(management);
-
+			
 			try {
-				LocalTime t3 = m.stringToTime(request.getParameter("startTime" + i));
-				LocalTime t4 = m.stringToTime(request.getParameter("endTime" + i));
-				if(!(t3.equals("")||t3 ==null)){
-					service5.startUpdate(t3,d);
+				long m_id =service4.getId(name);
+				//xIDあり→UpDate
+				try {
+					String str1 = request.getParameter("scheStartTime" + i);
+					if(!(str1.equals("")||str1 ==null)){
+						service4.scheStartUpdate(m_id,m.stringToTime(str1));
+					}
+				}catch(NullPointerException e) {
+					e.printStackTrace();
 				}
+				
+				
+				try {
+					String str2 = request.getParameter("scheEndTime" + i);
+					if(!(str2.equals("")||str2 ==null)){
+						service4.scheEndUpdate(m_id,m.stringToTime(str2));
+					}
+				}catch(NullPointerException e) {
+					e.printStackTrace();
+				}
+			}catch(NoResultException e) {
+				//xIDなし
+					String str1 = request.getParameter("scheStartTime" + i);
+					String str2 = request.getParameter("scheEndTime" + i);
+					if(!(str1.equals(""))&&str1 !=null&&!(str2.equals(""))&&str2 !=null){
+						management.setScheStratTime(m.stringToTime(str1));
+						management.setScheEndTime(m.stringToTime(str2));
+					}else if(!(str1.equals("")&&str1 ==null)){
+						management.setScheStratTime(m.stringToTime(str1));
+						management.setScheEndTime(null);
+					}else{
+						management.setScheStratTime(null);
+						management.setScheEndTime(m.stringToTime(str2));
 
-				if(!(t3.equals("")||t3==null)) {
-					service5.endUpdate(t4,d);
+					}
+					management.setName(name);
+					management.setDate(d);
+					management.setMonthSumTime(null);
+					management.setCreatedTime(t2);
+					management.setAccount(account);
+					repository2.saveAndFlush(management);
+			}
+			try {
+				String str3 = request.getParameter("startTime" + i);
+
+				if(!(str3.equals("")||str3 ==null)){
+					LocalTime t3 = m.stringToTime(str3);
+					service5.startUpdate(t3,d);
 				}
 			}catch(NullPointerException e) {
 				e.printStackTrace();
 			}catch(NoResultException e){
 				e.printStackTrace();
 			}
+			String str4 = request.getParameter("endTime" + i);
+			try {if(!(str4.equals("")||str4==null)) {
+				LocalTime t4 = m.stringToTime(str4);
+				service5.endUpdate(t4,d);}
+			}catch(NullPointerException e) {
+				e.printStackTrace();
+			}catch(NoResultException e){
+				e.printStackTrace();
+			}
+
 		}
 		mav.setViewName("calendar");
 		mav = new ModelAndView("redirect:/calendar/{id}/" + num);
