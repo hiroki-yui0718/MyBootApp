@@ -65,6 +65,7 @@ public class ServerController {
 				c.runSample("出勤");
 			}
 		}
+		data.setBool(true);
 		data.setDate(d1);
 		data.setTime(t1);
 		Account account = service2.findAccount(line);

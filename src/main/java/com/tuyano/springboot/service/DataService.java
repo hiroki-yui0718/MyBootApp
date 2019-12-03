@@ -20,7 +20,7 @@ public class DataService {
 
 	@SuppressWarnings("unchecked")
 	public List<Data> getAll() {
-		return (List<Data>)entityManager.createQuery("from Data order by data_id desc").getResultList();
+		return (List<Data>)entityManager.createQuery("from Data where bool = :bool order by data_id desc").setParameter("bool", true).getResultList();
 	}
 	public long findIdm(String idm) {
 		return (long)entityManager.createQuery("select count(*) from Data where idm = :idm").setParameter("idm", idm).getSingleResult();
@@ -84,6 +84,13 @@ public class DataService {
 	public long findEndId(LocalDate d) {
 		// TODO 自動生成されたメソッド・スタブ
 		return (long)entityManager.createQuery("select data_id from Data where state = :state and date = :date").setParameter("date", d).setParameter("state", "退勤").getSingleResult();
+
+	}
+	public String findBool(String name, LocalDate d) {
+		// TODO 自動生成されたメソッド・スタブ
+		long id = (long)entityManager.createQuery("select account_id from Account where username = :name").setParameter("name", name).getSingleResult();
+		return (String)entityManager.createQuery("select state from Data where account_id = :id and state = :state and date = :date").setParameter("id", id).setParameter("state", "有給").setParameter("date", d).setMaxResults(1).getSingleResult(); 
+
 
 	}
 

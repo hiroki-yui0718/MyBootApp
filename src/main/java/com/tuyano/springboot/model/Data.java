@@ -30,6 +30,8 @@ public class Data {
 	@Column
 	private String state;
 	@Column
+	private boolean bool = false;
+	@Column
 	private LocalTime daySumTime;
 	@ManyToOne
 	@JoinColumn(name="account_id")
@@ -69,6 +71,12 @@ public class Data {
 	}
 	public String getState() {
 		return state;
+	}
+	public void setBool(boolean bool) {
+		this.bool = bool;
+	}
+	public boolean getBool() {
+		return bool;
 	}
 
 	public void setDaySumTime(LocalTime daySumTime) {

@@ -76,6 +76,7 @@ public class CalController {
 			Cal cal = new Cal();
 			LocalDate d = LocalDate.of(year,month,i);
 			String str = month + "月"+ i +"日";
+			cal.setCalId(i);
 			cal.setIdm(service4.getIdm(name));
 			cal.setYear(year);
 			cal.setDay(str);
@@ -123,6 +124,12 @@ public class CalController {
 				cal.setDaySumTime(t6);
 			}catch(NoResultException e) {
 				cal.setDaySumTime(null);
+			}
+			try{
+				service5.findBool(name,d);
+				cal.setRest(true);
+			}catch(NoResultException e) {
+				cal.setRest(false);
 			}
 
 			sumTime += m.TimeToSecDiff(t5,t1);
@@ -210,6 +217,7 @@ public class CalController {
 			}
 			LocalTime t3 = null;
 			LocalTime t4= null;
+
 			try {
 				long d_id = service5.findStartId(d);
 				try {
@@ -222,9 +230,15 @@ public class CalController {
 				data.setIdm(account.getIdm());
 				data.setDate(d);
 				data.setTime(t3);
-				data.setState("出勤");
 				data.setDaySumTime(m.secToTime(0));
 				data.setAccount(account);
+				try{
+					String rest = request.getParameter("rest"+i);
+					data.setBool(true);
+					data.setState("有給");
+				}catch(NullPointerException ee) {
+					data.setState("出勤");
+				}
 				repository3.saveAndFlush(data);
 			}
 			try {
@@ -239,11 +253,18 @@ public class CalController {
 				data.setIdm(account.getIdm());
 				data.setDate(d);
 				data.setTime(t4);
-				data.setState("退勤");
 				data.setDaySumTime(null);
 				data.setAccount(account);
+				try{
+					String rest = request.getParameter("rest"+i);
+					data.setBool(true);
+					data.setState("有給");
+				}catch(NullPointerException ee) {
+					data.setState("退勤");
+				}
 				repository3.saveAndFlush(data);
 			}
+			
 
 		}
 		mav.setViewName("calendar");

@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Table(name="Cal")
 public class Cal {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private long cal_id;
 	@Column
@@ -36,6 +35,8 @@ public class Cal {
 	private LocalTime overTime;
 	@Column
 	private LocalTime daySumTime;
+	@Column
+	private boolean rest;
 	
 	public void setCalId(long cal_id) {
 		this.cal_id = cal_id;
@@ -104,5 +105,11 @@ public class Cal {
 	}
 	public void setDaySumTime(LocalTime daySumTime) {
 		this.daySumTime = daySumTime;
+	}
+	public void setRest(boolean rest) {
+		this.rest= rest;
+	}
+	public boolean getRest() {
+		return rest;
 	}
 }
